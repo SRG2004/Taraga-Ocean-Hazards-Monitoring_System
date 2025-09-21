@@ -112,6 +112,7 @@ const InteractiveMap = ({
   const [error, setError] = useState(null);
 
   // Synthetic data state
+
   const [syntheticReports, setSyntheticReports] = useState([]);
   const [syntheticHotspots, setSyntheticHotspots] = useState([]);
   const [showSyntheticData, setShowSyntheticData] = useState(true);
@@ -283,6 +284,7 @@ const InteractiveMap = ({
       }
     };
   }, [syntheticReports]);
+
 
 >>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
   const handleLayerToggle = (layer) => {
