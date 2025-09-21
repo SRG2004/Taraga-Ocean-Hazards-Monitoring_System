@@ -408,8 +408,6 @@
   background: #2563eb;
 }
 
-<<<<<<< HEAD
-=======
 /* Synthetic Report Controls */
 .synthetic-controls {
   background: #f8fafc;
@@ -520,33 +518,17 @@
   background: linear-gradient(135deg, #fef3c7 0%, #ffffff 100%);
 }
 
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
 /* Responsive Design */
 @media (max-width: 768px) {
   .monitoring-main {
     padding: 1rem;
   }
-<<<<<<< HEAD
-  
-=======
 
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
   .header-content {
     flex-direction: column;
     gap: 1rem;
     align-items: flex-start;
   }
-<<<<<<< HEAD
-  
-  .filters-grid {
-    grid-template-columns: 1fr;
-  }
-  
-  .analytics-grid {
-    grid-template-columns: 1fr;
-  }
-  
-=======
 
   .filters-grid {
     grid-template-columns: 1fr;
@@ -556,16 +538,12 @@
     grid-template-columns: 1fr;
   }
 
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
   .post-header,
   .post-footer {
     flex-direction: column;
     align-items: flex-start;
     gap: 0.5rem;
   }
-<<<<<<< HEAD
-}
-=======
 
   .control-group {
     flex-direction: column;
@@ -577,4 +555,3 @@
     margin-top: 0.5rem;
   }
 }
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)

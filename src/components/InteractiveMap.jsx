@@ -1,6 +1,4 @@
-import { socialMediaService } from '../services/socialMediaService';
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
-=======
+
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
@@ -8,9 +6,7 @@ import 'leaflet/dist/leaflet.css';
 import './InteractiveMap.css';
 import { hazardReportService } from '../services/hazardReportService';
 import { socialMediaService } from '../services/socialMediaService';
-=======
-import { socialMediaService } from '../services/socialMediaService';
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
+
 
 // Fix for default markers in react-leaflet
 delete Icon.Default.prototype._getIconUrl;
@@ -19,6 +15,7 @@ Icon.Default.mergeOptions({
   iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon.png',
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png'
 });
+
 
 // Custom icons for different hazard types
 const createCustomIcon = (color, type) => {
@@ -102,12 +99,23 @@ const InteractiveMap = ({
   height = '500px',
   enableRealTime = true
 }) => {
+  const [mapCenter, setMapCenter] = useState(center);
+  const [mapZoom, setMapZoom] = useState(zoom);
+  const [selectedLayers, setSelectedLayers] = useState({
+    reports: true,
+    alerts: true,
+    heatmap: showHeatmap
+  });
+  const [reports, setReports] = useState(propReports);
+  const [alerts, setAlerts] = useState(propAlerts);
+  const [loading, setLoading] = useState(false);
+  const [error, setError] = useState(null);
+
   // Synthetic data state
   const [syntheticReports, setSyntheticReports] = useState([]);
   const [syntheticHotspots, setSyntheticHotspots] = useState([]);
   const [showSyntheticData, setShowSyntheticData] = useState(true);
 
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
 =======
   const [mapCenter, setMapCenter] = useState(center);
   const [mapZoom, setMapZoom] = useState(zoom);
