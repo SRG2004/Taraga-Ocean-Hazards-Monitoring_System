@@ -1,10 +1,13 @@
+import { socialMediaService } from '../services/socialMediaService';
+>>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
+=======
 import React, { useState, useEffect } from 'react';
 import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-leaflet';
 import { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './InteractiveMap.css';
 import { hazardReportService } from '../services/hazardReportService';
-<<<<<<< HEAD
+import { socialMediaService } from '../services/socialMediaService';
 =======
 import { socialMediaService } from '../services/socialMediaService';
 >>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
@@ -99,6 +102,13 @@ const InteractiveMap = ({
   height = '500px',
   enableRealTime = true
 }) => {
+  // Synthetic data state
+  const [syntheticReports, setSyntheticReports] = useState([]);
+  const [syntheticHotspots, setSyntheticHotspots] = useState([]);
+  const [showSyntheticData, setShowSyntheticData] = useState(true);
+
+>>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
+=======
   const [mapCenter, setMapCenter] = useState(center);
   const [mapZoom, setMapZoom] = useState(zoom);
   const [selectedLayers, setSelectedLayers] = useState({
@@ -111,7 +121,10 @@ const InteractiveMap = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-<<<<<<< HEAD
+  // Synthetic data state
+  const [syntheticReports, setSyntheticReports] = useState([]);
+  const [syntheticHotspots, setSyntheticHotspots] = useState([]);
+  const [showSyntheticData, setShowSyntheticData] = useState(true);
 =======
   // Synthetic data state
   const [syntheticReports, setSyntheticReports] = useState([]);
