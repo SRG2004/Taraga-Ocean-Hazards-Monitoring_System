@@ -1,11 +1,6 @@
-<<<<<<< HEAD
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-=======
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { socialMediaService } from '../services/socialMediaService';
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
 import './SocialMediaMonitoring.css';
 
 const SocialMediaMonitoring = () => {
@@ -17,8 +12,6 @@ const SocialMediaMonitoring = () => {
     relevance: 50
   });
 
-<<<<<<< HEAD
-=======
   // Synthetic report state
   const [syntheticEnabled, setSyntheticEnabled] = useState(false);
   const [syntheticStats, setSyntheticStats] = useState({
@@ -29,7 +22,6 @@ const SocialMediaMonitoring = () => {
   const [syntheticPosts, setSyntheticPosts] = useState([]);
   const [showSyntheticOnly, setShowSyntheticOnly] = useState(false);
 
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
   const sentimentStats = {
     positive: 0,
     negative: 4,
@@ -110,8 +102,6 @@ const SocialMediaMonitoring = () => {
     }
   ];
 
-<<<<<<< HEAD
-=======
   // Synthetic report handlers
   const handleToggleSyntheticGeneration = () => {
     if (syntheticEnabled) {
@@ -163,7 +153,6 @@ const SocialMediaMonitoring = () => {
     return () => clearInterval(interval);
   }, []);
 
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
   return (
     <div className="social-media-monitoring">
       {/* Header */}
@@ -174,11 +163,7 @@ const SocialMediaMonitoring = () => {
             <p className="page-subtitle">Real-time social media analysis for ocean hazard detection</p>
           </div>
           <div className="header-actions">
-<<<<<<< HEAD
-            <button 
-=======
             <button
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
               className="header-button"
               onClick={() => navigate('/analyst')}
             >
@@ -187,8 +172,6 @@ const SocialMediaMonitoring = () => {
             <button className="refresh-button">🔄 Refresh</button>
           </div>
         </div>
-<<<<<<< HEAD
-=======
 
         {/* Synthetic Report Controls */}
         <div className="synthetic-controls">
@@ -223,7 +206,6 @@ const SocialMediaMonitoring = () => {
             </span>
           </div>
         </div>
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
       </header>
 
       <main className="monitoring-main">
@@ -232,9 +214,9 @@ const SocialMediaMonitoring = () => {
           <div className="filters-grid">
             <div className="filter-group">
               <label>Platform</label>
-              <select 
+              <select
                 value={filters.platform}
-                onChange={(e) => setFilters({...filters, platform: e.target.value})}
+                onChange={(e) => setFilters({ ...filters, platform: e.target.value })}
               >
                 <option>All Platforms</option>
                 <option>Twitter</option>
@@ -244,9 +226,9 @@ const SocialMediaMonitoring = () => {
             </div>
             <div className="filter-group">
               <label>Sentiment</label>
-              <select 
+              <select
                 value={filters.sentiment}
-                onChange={(e) => setFilters({...filters, sentiment: e.target.value})}
+                onChange={(e) => setFilters({ ...filters, sentiment: e.target.value })}
               >
                 <option>All Sentiments</option>
                 <option>Positive</option>
@@ -256,9 +238,9 @@ const SocialMediaMonitoring = () => {
             </div>
             <div className="filter-group">
               <label>Timeframe</label>
-              <select 
+              <select
                 value={filters.timeframe}
-                onChange={(e) => setFilters({...filters, timeframe: e.target.value})}
+                onChange={(e) => setFilters({ ...filters, timeframe: e.target.value })}
               >
                 <option>Last 24 Hours</option>
                 <option>Last 7 Days</option>
@@ -267,12 +249,12 @@ const SocialMediaMonitoring = () => {
             </div>
             <div className="filter-group">
               <label>Min Relevance: {filters.relevance}%</label>
-              <input 
+              <input
                 type="range"
                 min="0"
                 max="100"
                 value={filters.relevance}
-                onChange={(e) => setFilters({...filters, relevance: e.target.value})}
+                onChange={(e) => setFilters({ ...filters, relevance: e.target.value })}
                 className="relevance-slider"
               />
             </div>
@@ -337,27 +319,18 @@ const SocialMediaMonitoring = () => {
 
         {/* Social Media Posts */}
         <section className="posts-section">
-<<<<<<< HEAD
-          <h2 className="section-title">Social Media Posts ({socialMediaPosts.length})</h2>
-          <div className="posts-list">
-            {socialMediaPosts.map((post) => (
-=======
           <h2 className="section-title">
             Social Media Posts ({filteredPosts.length})
             {showSyntheticOnly && <span className="synthetic-indicator"> [Synthetic Only]</span>}
           </h2>
           <div className="posts-list">
             {filteredPosts.map((post) => (
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
               <div key={post.id} className="post-card">
                 <div className="post-header">
                   <div className="post-source">
                     <span className="platform-name">{post.platform}</span>
                     {post.verified && <span className="verified-badge">✓</span>}
-<<<<<<< HEAD
-=======
                     {post.isSynthetic && <span className="synthetic-badge">🤖</span>}
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
                   </div>
                   <div className="post-meta">
                     <span className={`sentiment-badge ${post.sentiment.toLowerCase()}`}>
