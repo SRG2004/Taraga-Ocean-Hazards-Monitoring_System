@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { useNavigate, useLocation } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 import './Navigation.css';
+import logo from '../attached_assets/TARANG_logo.png';
 
 const Navigation = () => {
   const navigate = useNavigate();
@@ -102,8 +103,8 @@ const Navigation = () => {
       )}
       
       <div className="nav-brand" onClick={() => navigate('/')}>
-        <span className="nav-logo">🌊</span>
-        <span className="nav-title">Taranga</span>
+        <img src={logo} alt="Tarang Logo" className="nav-logo" />
+        <span className="nav-title">Tarang</span>
       </div>
       
       <div className="nav-links">

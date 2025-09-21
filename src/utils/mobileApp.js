@@ -3,9 +3,9 @@
 
 export const generateMobileAppConfig = () => {
   return {
-    name: "Taranga Ocean Hazard Monitor",
-    displayName: "Taranga",
-    identifier: "com.incois.taranga",
+    name: "Tarang Ocean Hazard Monitor",
+    displayName: "Tarang",
+    identifier: "com.incois.tarang",
     version: "1.0.0",
     description: "Real-time ocean hazard monitoring and reporting system for coastal safety",
     icon: "public/favicon.svg",
@@ -39,8 +39,8 @@ export const generateMobileAppConfig = () => {
 
 export const generateCapacitorConfig = () => {
   return {
-    appId: "com.incois.taranga",
-    appName: "Taranga",
+    appId: "com.incois.tarang",
+    appName: "Tarang",
     webDir: "dist",
     bundledWebRuntime: false,
     plugins: {
@@ -72,8 +72,8 @@ export const generateCapacitorConfig = () => {
 
 export const generateReactNativeConfig = () => {
   return {
-    name: "TarangaApp",
-    displayName: "Taranga Ocean Monitor",
+    name: "TarangApp",
+    displayName: "Tarang Ocean Monitor",
     version: "1.0.0",
     dependencies: {
       "react": "18.2.0",
@@ -105,8 +105,8 @@ export const generateReactNativeConfig = () => {
 export const generatePWAConfig = () => {
   return {
     manifest: {
-      name: "Taranga Ocean Hazard Monitor",
-      short_name: "Taranga",
+      name: "Tarang Ocean Hazard Monitor",
+      short_name: "Tarang",
       description: "Real-time ocean hazard monitoring and reporting system",
       start_url: "/",
       display: "standalone",
