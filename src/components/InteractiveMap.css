@@ -249,4 +249,127 @@
   border: 1px solid #fecaca;
   border-radius: 8px;
   margin: 1rem;
+<<<<<<< HEAD
 }
+=======
+}
+
+/* Synthetic Data Controls */
+.synthetic-controls {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  padding: 0.75rem;
+  margin-top: 0.5rem;
+}
+
+.synthetic-controls h5 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #92400e;
+  margin-bottom: 0.5rem;
+}
+
+.synthetic-controls label {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.8rem;
+  color: #92400e;
+  cursor: pointer;
+}
+
+.synthetic-controls input[type="checkbox"] {
+  accent-color: #f59e0b;
+}
+
+.synthetic-stats {
+  display: flex;
+  gap: 1rem;
+  margin-top: 0.5rem;
+}
+
+.synthetic-stats small {
+  font-size: 0.75rem;
+  color: #92400e;
+  font-weight: 500;
+}
+
+/* Synthetic Hotspots */
+.leaflet-interactive[stroke-dasharray="10, 10"] {
+  animation: synthetic-pulse 3s ease-in-out infinite;
+}
+
+@keyframes synthetic-pulse {
+  0%, 100% {
+    opacity: 0.8;
+    stroke-width: 3;
+  }
+  50% {
+    opacity: 0.6;
+    stroke-width: 4;
+  }
+}
+
+/* Synthetic Popup */
+.synthetic-popup {
+  border-left: 4px solid #f59e0b;
+}
+
+.synthetic-popup h4 {
+  color: #92400e;
+}
+
+.synthetic-note {
+  color: #92400e;
+  font-style: italic;
+  margin-top: 0.5rem;
+  display: block;
+}
+
+/* Synthetic Statistics */
+.stat-item.synthetic {
+  background: #fef3c7;
+  border: 1px solid #f59e0b;
+  border-radius: 6px;
+  padding: 0.5rem;
+  min-width: 120px;
+}
+
+.stat-item.synthetic .stat-value {
+  color: #92400e;
+}
+
+.stat-item.synthetic .stat-label {
+  color: #92400e;
+  font-weight: 500;
+}
+
+/* Enhanced Legend for Synthetic Data */
+.legend-item.synthetic {
+  background: #fef3c7;
+  padding: 0.25rem 0.5rem;
+  border-radius: 4px;
+  margin-bottom: 0.25rem;
+}
+
+.legend-item.synthetic .legend-marker {
+  animation: synthetic-pulse 3s ease-in-out infinite;
+}
+
+/* Responsive Design for Synthetic Controls */
+@media (max-width: 768px) {
+  .synthetic-controls {
+    margin-top: 1rem;
+  }
+
+  .synthetic-stats {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+
+  .stat-item.synthetic {
+    min-width: 100px;
+  }
+}
+>>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)

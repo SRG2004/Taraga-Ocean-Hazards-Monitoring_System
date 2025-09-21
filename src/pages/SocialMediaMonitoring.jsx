@@ -1,5 +1,11 @@
+<<<<<<< HEAD
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+=======
+import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import { socialMediaService } from '../services/socialMediaService';
+>>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
 import './SocialMediaMonitoring.css';
 
 const SocialMediaMonitoring = () => {
@@ -11,6 +17,19 @@ const SocialMediaMonitoring = () => {
     relevance: 50
   });
 
+<<<<<<< HEAD
+=======
+  // Synthetic report state
+  const [syntheticEnabled, setSyntheticEnabled] = useState(false);
+  const [syntheticStats, setSyntheticStats] = useState({
+    isEnabled: false,
+    reportCount: 0,
+    isGenerating: false
+  });
+  const [syntheticPosts, setSyntheticPosts] = useState([]);
+  const [showSyntheticOnly, setShowSyntheticOnly] = useState(false);
+
+>>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
   const sentimentStats = {
     positive: 0,
     negative: 4,
@@ -91,6 +110,60 @@ const SocialMediaMonitoring = () => {
     }
   ];
 
+<<<<<<< HEAD
+=======
+  // Synthetic report handlers
+  const handleToggleSyntheticGeneration = () => {
+    if (syntheticEnabled) {
+      socialMediaService.syntheticReports.stopGeneration();
+      setSyntheticEnabled(false);
+    } else {
+      socialMediaService.syntheticReports.startGeneration(2, 2); // 2 posts every 2 minutes
+      setSyntheticEnabled(true);
+    }
+  };
+
+  const handleGenerateSyntheticReports = async (count = 3) => {
+    try {
+      const posts = await socialMediaService.syntheticReports.generateReports(count);
+      setSyntheticPosts(prev => [...posts, ...prev].slice(0, 50)); // Keep last 50
+    } catch (error) {
+      console.error('Error generating synthetic reports:', error);
+      alert('Error generating synthetic reports. Please check console for details.');
+    }
+  };
+
+  const handleGenerateHazardScenario = async (hazardType, location, severity) => {
+    try {
+      const posts = await socialMediaService.syntheticReports.generateHazardScenario(
+        hazardType,
+        location,
+        severity,
+        2
+      );
+      setSyntheticPosts(prev => [...posts, ...prev].slice(0, 50));
+    } catch (error) {
+      console.error('Error generating hazard scenario:', error);
+      alert('Error generating hazard scenario. Please check console for details.');
+    }
+  };
+
+  // Filter posts based on synthetic filter
+  const filteredPosts = showSyntheticOnly
+    ? syntheticPosts
+    : [...socialMediaPosts, ...syntheticPosts];
+
+  // Update synthetic stats periodically
+  useEffect(() => {
+    const interval = setInterval(() => {
+      const stats = socialMediaService.syntheticReports.getStats();
+      setSyntheticStats(stats);
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+
+>>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
   return (
     <div className="social-media-monitoring">
       {/* Header */}
@@ -101,7 +174,11 @@ const SocialMediaMonitoring = () => {
             <p className="page-subtitle">Real-time social media analysis for ocean hazard detection</p>
           </div>
           <div className="header-actions">
+<<<<<<< HEAD
             <button 
+=======
+            <button
+>>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
               className="header-button"
               onClick={() => navigate('/analyst')}
             >
@@ -110,6 +187,43 @@ const SocialMediaMonitoring = () => {
             <button className="refresh-button">🔄 Refresh</button>
           </div>
         </div>
+<<<<<<< HEAD
+=======
+
+        {/* Synthetic Report Controls */}
+        <div className="synthetic-controls">
+          <div className="control-group">
+            <label className="control-label">Synthetic Reports</label>
+            <button
+              className={`synthetic-toggle ${syntheticEnabled ? 'active' : ''}`}
+              onClick={handleToggleSyntheticGeneration}
+            >
+              {syntheticEnabled ? '🟢 Stop Generation' : '🔴 Start Generation'}
+            </button>
+            <button
+              className="generate-button"
+              onClick={() => handleGenerateSyntheticReports(3)}
+            >
+              Generate 3 Posts
+            </button>
+            <button
+              className="synthetic-filter-toggle"
+              onClick={() => setShowSyntheticOnly(!showSyntheticOnly)}
+            >
+              {showSyntheticOnly ? 'Show All' : 'Synthetic Only'}
+            </button>
+          </div>
+
+          <div className="synthetic-stats">
+            <span className="stat-item">
+              Generated: {syntheticStats.reportCount}
+            </span>
+            <span className="stat-item">
+              Status: {syntheticStats.isGenerating ? 'Active' : 'Inactive'}
+            </span>
+          </div>
+        </div>
+>>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
       </header>
 
       <main className="monitoring-main">
@@ -223,14 +337,27 @@ const SocialMediaMonitoring = () => {
 
         {/* Social Media Posts */}
         <section className="posts-section">
+<<<<<<< HEAD
           <h2 className="section-title">Social Media Posts ({socialMediaPosts.length})</h2>
           <div className="posts-list">
             {socialMediaPosts.map((post) => (
+=======
+          <h2 className="section-title">
+            Social Media Posts ({filteredPosts.length})
+            {showSyntheticOnly && <span className="synthetic-indicator"> [Synthetic Only]</span>}
+          </h2>
+          <div className="posts-list">
+            {filteredPosts.map((post) => (
+>>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
               <div key={post.id} className="post-card">
                 <div className="post-header">
                   <div className="post-source">
                     <span className="platform-name">{post.platform}</span>
                     {post.verified && <span className="verified-badge">✓</span>}
+<<<<<<< HEAD
+=======
+                    {post.isSynthetic && <span className="synthetic-badge">🤖</span>}
+>>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
                   </div>
                   <div className="post-meta">
                     <span className={`sentiment-badge ${post.sentiment.toLowerCase()}`}>

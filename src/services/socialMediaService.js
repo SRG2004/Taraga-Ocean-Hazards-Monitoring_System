@@ -1,4 +1,9 @@
 import axios from 'axios';
+<<<<<<< HEAD
+=======
+import { syntheticReportGenerator } from '../utils/syntheticReportGenerator.js';
+import { syntheticReportDbService } from './syntheticReportDatabaseService.js';
+>>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || '/api';
 
@@ -340,5 +345,138 @@ export const socialMediaService = {
     });
 
     return stats;
+<<<<<<< HEAD
   }
 };
+=======
+  },
+
+  // Synthetic Report Management
+  syntheticReports: {
+    isEnabled: false,
+    generationInterval: null,
+    reportCount: 0,
+
+    // Enable synthetic report generation
+    startGeneration(intervalMinutes = 5, postsPerInterval = 3) {
+      if (this.isEnabled) {
+        console.warn('Synthetic report generation is already enabled');
+        return;
+      }
+
+      this.isEnabled = true;
+      console.log(`Starting synthetic report generation: ${postsPerInterval} posts every ${intervalMinutes} minutes`);
+
+      this.generationInterval = setInterval(() => {
+        const posts = syntheticReportGenerator.generateMultiplePosts(postsPerInterval);
+        this.reportCount += posts.length;
+
+        // Emit synthetic posts to any listeners
+        if (window.socket) {
+          posts.forEach(post => {
+            window.socket.emit('synthetic-social-media-post', post);
+          });
+        }
+
+        console.log(`Generated ${posts.length} synthetic reports. Total: ${this.reportCount}`);
+      }, intervalMinutes * 60 * 1000);
+
+      return this.generationInterval;
+    },
+
+    // Stop synthetic report generation
+    stopGeneration() {
+      if (this.generationInterval) {
+        clearInterval(this.generationInterval);
+        this.generationInterval = null;
+      }
+      this.isEnabled = false;
+      console.log(`Stopped synthetic report generation. Total generated: ${this.reportCount}`);
+    },
+
+    // Generate one-time synthetic reports
+    async generateReports(count = 5, options = {}) {
+      try {
+        const posts = syntheticReportGenerator.generateMultiplePosts(count, options);
+        this.reportCount += posts.length;
+
+        // Save to database
+        await syntheticReportDbService.saveMultipleSyntheticReports(posts);
+
+        // Emit synthetic posts
+        if (window.socket) {
+          posts.forEach(post => {
+            window.socket.emit('synthetic-social-media-post', post);
+          });
+        }
+
+        console.log(`✅ Generated and saved ${posts.length} synthetic reports to database`);
+        return posts;
+
+      } catch (error) {
+        console.error('❌ Error generating synthetic reports:', error);
+        throw error;
+      }
+    },
+
+    // Get synthetic report statistics
+    getStats() {
+      return {
+        isEnabled: this.isEnabled,
+        reportCount: this.reportCount,
+        isGenerating: this.generationInterval !== null
+      };
+    },
+
+    // Generate synthetic reports for specific hazard scenario
+    async generateHazardScenario(hazardType, location, severity = 'high', count = 3) {
+      const options = {
+        hazardType,
+        severity,
+        location: typeof location === 'string'
+          ? syntheticReportGenerator.config.locations.find(l => l.name.toLowerCase() === location.toLowerCase())
+          : location
+      };
+
+      return await this.generateReports(count, options);
+    },
+
+    // Database operations for synthetic reports
+    async getSyntheticReportsFromDatabase(filters = {}) {
+      try {
+        return await syntheticReportDbService.getSyntheticReports(filters);
+      } catch (error) {
+        console.error('❌ Error fetching synthetic reports from database:', error);
+        throw error;
+      }
+    },
+
+    async getSyntheticReportStatsFromDatabase(timeRange = '24h') {
+      try {
+        return await syntheticReportDbService.getSyntheticReportStats(timeRange);
+      } catch (error) {
+        console.error('❌ Error fetching synthetic report stats from database:', error);
+        throw error;
+      }
+    },
+
+    async cleanupOldSyntheticReports(daysOld = 30) {
+      try {
+        return await syntheticReportDbService.cleanupOldReports(daysOld);
+      } catch (error) {
+        console.error('❌ Error cleaning up old synthetic reports:', error);
+        throw error;
+      }
+    },
+
+    async getDatabaseConnectionStatus() {
+      try {
+        return await syntheticReportDbService.getConnectionStatus();
+      } catch (error) {
+        console.error('❌ Error checking database connection:', error);
+        return { connected: false, error: error.message };
+      }
+    }
+  }
+};
+>>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
