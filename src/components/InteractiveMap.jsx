@@ -173,6 +173,21 @@ const InteractiveMap = ({
     setAlerts(propAlerts);
   }, [propAlerts]);
 
+  // Load initial synthetic reports and generate hotspots
+  useEffect(() => {
+    const loadSyntheticReports = async () => {
+      try {
+        const syntheticData = await socialMediaService.syntheticReports.getReports();
+        setSyntheticReports(syntheticData);
+        generateSyntheticHotspots(syntheticData);
+      } catch (error) {
+        console.error('Error loading synthetic reports:', error);
+      }
+    };
+
+    loadSyntheticReports();
+  }, []);
+
 <<<<<<< HEAD
 =======
   // Handle synthetic reports
