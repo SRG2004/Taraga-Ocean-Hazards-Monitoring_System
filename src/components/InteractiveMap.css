@@ -249,9 +249,6 @@
   border: 1px solid #fecaca;
   border-radius: 8px;
   margin: 1rem;
-<<<<<<< HEAD
-}
-=======
 }
 
 /* Synthetic Data Controls */
@@ -372,4 +369,3 @@
     min-width: 100px;
   }
 }
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)

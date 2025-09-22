@@ -209,21 +209,35 @@ app.use((err, req, res, next) => {
   });
 });
 
-// Serve frontend static files
-app.use(express.static(path.join(__dirname, 'dist')));
+// Serve frontend static files in production only
+if (process.env.NODE_ENV === 'production') {
+  app.use(express.static(path.join(__dirname, 'dist')));
 
-// Fallback to index.html for SPA routes (non-API routes)
-
-// Catch-all for SPA routing (non-API routes)
-app.use((req, res, next) => {
-  if (req.path.startsWith('/api')) {
-    return res.status(404).json({
-      error: 'API route not found',
-      path: req.originalUrl
+  // Catch-all for SPA routing (non-API routes)
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return res.status(404).json({
+        error: 'API route not found',
+        path: req.originalUrl
+      });
+    }
+    res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+  });
+} else {
+  // In development, only handle API 404s
+  app.use((req, res, next) => {
+    if (req.path.startsWith('/api')) {
+      return res.status(404).json({
+        error: 'API route not found',
+        path: req.originalUrl
+      });
+    }
+    res.status(404).json({
+      error: 'Frontend not served from backend in development',
+      message: 'Please use the frontend dev server on port 5000'
     });
-  }
-  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
-});
+  });
+}
 
 /**
  * Server Initialization
@@ -247,7 +261,7 @@ const startServer = async () => {
     console.log('✅ Automated alert system started');
     
     // Start server
-    server.listen(PORT, 'localhost', () => {
+    server.listen(PORT, '0.0.0.0', () => {
       console.log(`🌊 Taranga Ocean Hazard Monitor Server running on port ${PORT}`);
       console.log(`📡 Real-time WebSocket server active`);
       console.log(`🔒 Security middleware enabled`);

@@ -18,10 +18,9 @@ run = ["node", "server.js"]
 [[ports]]
 localPort = 3001
 externalPort = 3001
-exposeLocalhost = true
 
 [[ports]]
-localPort = 43533
+localPort = 35367
 externalPort = 80
 
 [agent]
