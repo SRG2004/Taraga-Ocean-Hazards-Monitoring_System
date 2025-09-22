@@ -112,35 +112,9 @@ const InteractiveMap = ({
   const [error, setError] = useState(null);
 
   // Synthetic data state
-
   const [syntheticReports, setSyntheticReports] = useState([]);
   const [syntheticHotspots, setSyntheticHotspots] = useState([]);
   const [showSyntheticData, setShowSyntheticData] = useState(true);
-
-=======
-  const [mapCenter, setMapCenter] = useState(center);
-  const [mapZoom, setMapZoom] = useState(zoom);
-  const [selectedLayers, setSelectedLayers] = useState({
-    reports: true,
-    alerts: true,
-    heatmap: showHeatmap
-  });
-  const [reports, setReports] = useState(propReports);
-  const [alerts, setAlerts] = useState(propAlerts);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // Synthetic data state
-  const [syntheticReports, setSyntheticReports] = useState([]);
-  const [syntheticHotspots, setSyntheticHotspots] = useState([]);
-  const [showSyntheticData, setShowSyntheticData] = useState(true);
-=======
-  // Synthetic data state
-  const [syntheticReports, setSyntheticReports] = useState([]);
-  const [syntheticHotspots, setSyntheticHotspots] = useState([]);
-  const [showSyntheticData, setShowSyntheticData] = useState(true);
-
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
   // Load reports from API
   const loadReports = async (filters = {}) => {
     try {
@@ -210,8 +184,6 @@ const InteractiveMap = ({
     loadSyntheticReports();
   }, []);
 
-<<<<<<< HEAD
-=======
   // Handle synthetic reports
   const handleSyntheticReports = (reports) => {
     setSyntheticReports(prev => [...reports, ...prev].slice(0, 100)); // Keep last 100
@@ -286,7 +258,7 @@ const InteractiveMap = ({
   }, [syntheticReports]);
 
 
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
+
   const handleLayerToggle = (layer) => {
     setSelectedLayers(prev => ({
       ...prev,
@@ -341,8 +313,7 @@ const InteractiveMap = ({
             />
             Density Heatmap
           </label>
-<<<<<<< HEAD
-=======
+
 
           {/* Synthetic Data Controls */}
           <div className="synthetic-controls">
@@ -360,7 +331,7 @@ const InteractiveMap = ({
               <small>Synthetic Hotspots: {syntheticHotspots.length}</small>
             </div>
           </div>
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
+
         </div>
         
         <div className="location-search">
@@ -466,8 +437,7 @@ const InteractiveMap = ({
               </Popup>
             </Circle>
           ))}
-<<<<<<< HEAD
-=======
+
 
           {/* Synthetic Hotspots */}
           {showSyntheticData && syntheticHotspots.map((hotspot) => (
@@ -494,7 +464,7 @@ const InteractiveMap = ({
               </Popup>
             </Circle>
           ))}
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
+
         </MapContainer>
       </div>
 
@@ -514,8 +484,7 @@ const InteractiveMap = ({
           </span>
           <span className="stat-label">High Priority</span>
         </div>
-<<<<<<< HEAD
-=======
+
 
         {/* Synthetic Data Stats */}
         {showSyntheticData && (
@@ -531,7 +500,7 @@ const InteractiveMap = ({
           </>
         )}
 
->>>>>>> 94addd6 (Initial commit with synthetic report generator and architecture documentation)
+
         {loading && (
           <div className="stat-item">
             <span className="stat-value">⟳</span>
