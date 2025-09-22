@@ -116,7 +116,7 @@ const AnalyticsDashboard = () => {
       {/* Header */}
       <header className="dashboard-header">
         <div className="header-content">
-          <h1 className="dashboard-title">Taranga Analytics Dashboard</h1>
+          <h1 className="dashboard-title">Tarang Analytics Dashboard</h1>
           <p className="dashboard-subtitle">
             Comprehensive data insights and trend analysis for ocean hazard monitoring
           </p>
@@ -253,7 +253,7 @@ const AnalyticsDashboard = () => {
           {/* Hazard Trends */}
           <section className="hazard-trends">
             <h2 className="section-title">Hazard Trends Analysis</h2>
-            <div className="trends-list">
+            <div className.jsx-list">
               {hazardTrends.map((hazard, index) => (
                 <div key={index} className="trend-item">
                   <div className="trend-info">

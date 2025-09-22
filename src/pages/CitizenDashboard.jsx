@@ -130,7 +130,7 @@ const CitizenDashboard = () => {
               className="logo-button"
               onClick={() => navigate('/')}
             >
-              🏠 Taranga Citizen Dashboard
+              🏠 Tarang Citizen Dashboard
             </button>
           </div>
           <div className="header-actions">
@@ -162,7 +162,7 @@ const CitizenDashboard = () => {
             {/* Welcome Section */}
             <section className="welcome-section">
               <div className="welcome-card">
-                <h1 className="welcome-title">Welcome to Taranga</h1>
+                <h1 className="welcome-title">Welcome to Tarang</h1>
                 <p className="welcome-subtitle">
                   Stay informed and help keep our coastal communities safe
                 </p>

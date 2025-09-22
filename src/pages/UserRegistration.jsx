@@ -104,7 +104,7 @@ const UserRegistration = () => {
     <div className="user-registration-page">
       <div className="registration-container">
         <div className="registration-header">
-          <h1>🌊 Join Taranga Ocean Safety Network</h1>
+          <h1>🌊 Join Tarang Ocean Safety Network</h1>
           <p>Create your account to access ocean hazard monitoring and reporting features</p>
         </div>
 
