@@ -20,7 +20,7 @@ export default function App() {
   const isProduction = import.meta.env.PROD;
   
   if (isProduction) {
-    console.log('🌊 Taranga Ocean Hazard Monitor - Production Mode');
+    console.log('🌊 Tarang Ocean Hazard Monitor - Production Mode');
     console.log('Environment:', import.meta.env.MODE);
   }
 
@@ -89,7 +89,7 @@ export default function App() {
           borderRadius: '12px',
           boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
         }}>
-          <h1 style={{color: '#1f2937', marginBottom: '20px'}}>🌊 Taranga Ocean Hazard Monitor</h1>
+          <h1 style={{color: '#1f2937', marginBottom: '20px'}}>🌊 Tarang Ocean Hazard Monitor</h1>
           <div style={{padding: '20px', background: '#fef2f2', borderRadius: '8px', marginBottom: '20px'}}>
             <p style={{color: '#dc2626', margin: 0}}>Application is loading... Please refresh the page.</p>
           </div>

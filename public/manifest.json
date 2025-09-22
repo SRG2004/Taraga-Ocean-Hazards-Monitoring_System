@@ -1,6 +1,6 @@
 {
-  "name": "Taranga Ocean Hazard Monitor",
-  "short_name": "Taranga",
+  "name": "Tarang Ocean Hazard Monitor",
+  "short_name": "Tarang",
   "description": "Real-time ocean hazard monitoring and reporting system for coastal safety",
   "start_url": "/",
   "display": "standalone",

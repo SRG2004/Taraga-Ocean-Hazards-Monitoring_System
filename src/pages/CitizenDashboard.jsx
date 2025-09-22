@@ -72,7 +72,7 @@ const CitizenDashboard = () => {
         navigate('/social-media');
         break;
       case 'settings':
-        navigate('/profile');
+        navigate('/settings');
         break;
       case 'support':
         navigate('/donations');
