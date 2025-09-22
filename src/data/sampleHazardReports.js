@@ -19,8 +19,8 @@ export const sampleHazardReports = [
       name: 'Punjab Disaster Management Authority',
       type: 'official'
     },
-    reportedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
-    verifiedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // 30 mins ago
+    reportedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+    verifiedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(),
     verifiedBy: 'admin@oceanhazard.com',
     affectedArea: '1,400 villages',
     estimatedAffectedPopulation: 2500000,
@@ -58,7 +58,7 @@ export const sampleHazardReports = [
     verifiedBy: 'admin@oceanhazard.com',
     tags: ['high', 'flash_flood', 'landslide', 'monsoon']
   },
-  {
+    {
     id: 'hr_2025_mumbai',
     title: 'Severe Urban & Coastal Flooding in Mumbai',
     type: 'flood',
@@ -149,8 +149,8 @@ export const sampleHazardReports = [
       name: 'Coastal Observer',
       type: 'citizen'
     },
-    reportedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
-    verifiedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
+    reportedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    verifiedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
     verifiedBy: 'officer@oceanhazard.com',
     affectedArea: '2.5 km stretch',
     estimatedAffectedPopulation: 15000,
@@ -183,8 +183,8 @@ export const sampleHazardReports = [
       name: 'Meteorological Station',
       type: 'official'
     },
-    reportedAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
-    verifiedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
+    reportedAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+    verifiedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
     verifiedBy: 'admin@oceanhazard.com',
     affectedArea: '50 km radius',
     estimatedAffectedPopulation: 500000,
@@ -217,8 +217,8 @@ export const sampleHazardReports = [
       name: 'Fisherman Association',
       type: 'citizen'
     },
-    reportedAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(), // 6 hours ago
-    verifiedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(), // 5 hours ago
+    reportedAt: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+    verifiedAt: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
     verifiedBy: 'analyst@oceanhazard.com',
     affectedArea: '1.2 km²',
     estimatedAffectedPopulation: 5000,
@@ -251,8 +251,8 @@ export const sampleHazardReports = [
       name: 'Lifeguard Team',
       type: 'official'
     },
-    reportedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
-    verifiedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+    reportedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+    verifiedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
     verifiedBy: 'officer@oceanhazard.com',
     affectedArea: '15 km coastline',
     estimatedAffectedPopulation: 25000,
@@ -285,8 +285,8 @@ export const sampleHazardReports = [
       name: 'Coastal Research Station',
       type: 'researcher'
     },
-    reportedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(), // 1 day ago
-    verifiedAt: new Date(Date.now() - 20 * 60 * 60 * 1000).toISOString(), // 20 hours ago
+    reportedAt: new Date(Date.now() - 24 * 60 * 60 * 1000).toISOString(),
+    verifiedAt: new Date(Date.now() - 20 * 60 * 60 * 1000).toISOString(),
     verifiedBy: 'analyst@oceanhazard.com',
     affectedArea: '800m coastline',
     estimatedAffectedPopulation: 2000,
