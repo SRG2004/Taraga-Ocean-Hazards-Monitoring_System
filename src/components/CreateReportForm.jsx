@@ -164,16 +164,18 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
   };
 
   return (
-    <div className="create-report-modal">
+    <>
       <div className="modal-overlay" onClick={onClose}></div>
-      <div className="modal-content">
-        <div className="modal-header">
-          <h2>Report Ocean Hazard</h2>
-          <button className="close-button" onClick={onClose}>×</button>
-        </div>
+      <div className="create-report-modal">
+        <div className="modal-content">
+          <div className="modal-header">
+            <h2>Report Ocean Hazard</h2>
+            <button className="close-button" onClick={onClose}>×</button>
+          </div>
 
-        <form onSubmit={handleSubmit} className="report-form">
-          <div className="form-section">
+          <form onSubmit={handleSubmit} className="report-form">
+            {/* Form sections go here, same as before */}
+            <div className="form-section">
             <h3>Basic Information</h3>
             <div className="form-group">
               <label htmlFor="title">Report Title</label>
@@ -216,7 +218,7 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
                   <option key={level.value} value={level.value}>
                     {level.label}
                   </option>
-                ))}
+                ))}\
               </select>
             </div>
             <div className="form-group">
@@ -305,9 +307,10 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
               {loading ? 'Submitting...' : 'Submit Report'}
             </button>
           </div>
-        </form>
+          </form>
+        </div>
       </div>
-    </div>
+    </>
   );
 };
 
