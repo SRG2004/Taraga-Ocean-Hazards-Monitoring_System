@@ -74,9 +74,11 @@ const InteractiveMap = ({
     heatmap: showHeatmap
   });
 
-  // Data is static, so no need for state. Filter verified reports and generate hotspots.
-  const reports = sampleHazardReports.filter(report => report.verifiedAt);
-  const hotspots = generateHotspots(reports);
+  // Generate hotspots from all reports, then filter verified ones.
+  const allHotspots = generateHotspots(sampleHazardReports);
+  const verifiedReports = sampleHazardReports.filter(report => report.verifiedAt);
+  const verifiedHotspotIds = new Set(allHotspots.flatMap(h => h.reports));
+  const verifiedHotspots = allHotspots.filter(h => h.reports.some(reportId => verifiedHotspotIds.has(reportId)));
 
   const handleLayerToggle = (layer) => {
     setSelectedLayers(prev => ({
@@ -177,7 +179,7 @@ const InteractiveMap = ({
           />
 
           {/* Hazard Reports */}
-          {selectedLayers.reports && reports.map((report) => (
+          {selectedLayers.reports && verifiedReports.map((report) => (
             <Marker
               key={report.id}
               position={[report.location.latitude, report.location.longitude]}
@@ -201,7 +203,7 @@ const InteractiveMap = ({
           ))}
 
           {/* Hotspots */}
-          {selectedLayers.heatmap && hotspots.map((hotspot) => (
+          {selectedLayers.heatmap && verifiedHotspots.map((hotspot) => (
             <Circle
               key={hotspot.id}
               center={hotspot.center}
@@ -235,16 +237,16 @@ const InteractiveMap = ({
       {/* Map Statistics */}
       <div className="map-stats">
         <div className="stat-item">
-          <span className="stat-value">{reports.length}</span>
+          <span className="stat-value">{verifiedReports.length}</span>
           <span className="stat-label">Verified Reports</span>
         </div>
         <div className="stat-item">
-          <span className="stat-value">{hotspots.length}</span>
+          <span className="stat-value">{verifiedHotspots.length}</span>
           <span className="stat-label">Hotspots</span>
         </div>
         <div className="stat-item">
           <span className="stat-value">
-            {reports.filter(r => r.severity === 'critical' || r.severity === 'high').length}
+            {verifiedReports.filter(r => r.severity === 'critical' || r.severity === 'high').length}
           </span>
           <span className="stat-label">High Priority</span>
         </div>
