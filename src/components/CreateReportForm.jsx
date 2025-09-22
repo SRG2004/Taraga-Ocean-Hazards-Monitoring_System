@@ -52,7 +52,7 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
           // Try to get address from coordinates
           try {
             const response = await fetch(
-              `https://api.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
+              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
             );
             const data = await response.json();
             if (data.display_name) {
@@ -116,8 +116,8 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
           latitude: formData.coordinates.lat,
           longitude: formData.coordinates.lng,
           address: formData.locationAddress,
-          state: extractStateFromAddress(formData.locationAddress),
-          district: extractDistrictFromAddress(formData.locationAddress)
+          state: await extractStateFromCoords(formData.coordinates),
+          district: await extractDistrictFromCoords(formData.coordinates)
         }
       };
 
@@ -136,19 +136,35 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
     }
   };
 
-  // Helper functions to extract location info
-  const extractStateFromAddress = (address) => {
-    if (!address) return '';
-    // Simple extraction - can be improved with proper geocoding
-    const parts = address.split(',');
-    return parts.length > 3 ? parts[parts.length - 2].trim() : '';
+  // Helper functions to extract location info from coordinates
+  const extractStateFromCoords = async (coords) => {
+    if (!coords) return '';
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
+      );
+      const data = await response.json();
+      return data.address?.state || '';
+    } catch (error) {
+      console.error('Error getting state from coords:', error);
+      return '';
+    }
   };
 
-  const extractDistrictFromAddress = (address) => {
-    if (!address) return '';
-    const parts = address.split(',');
-    return parts.length > 2 ? parts[parts.length - 3].trim() : '';
+  const extractDistrictFromCoords = async (coords) => {
+    if (!coords) return '';
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
+      );
+      const data = await response.json();
+      return data.address?.state_district || '';
+    } catch (error) {
+      console.error('Error getting district from coords:', error);
+      return '';
+    }
   };
+
 
   return (
     <div className="create-report-modal">

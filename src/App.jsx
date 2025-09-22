@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import { AppProvider } from './contexts/AppContext';
@@ -23,6 +23,8 @@ export default function App() {
     console.log('🌊 Tarang Ocean Hazard Monitor - Production Mode');
     console.log('Environment:', import.meta.env.MODE);
   }
+  
+  const [selectedLocation, setSelectedLocation] = useState(null);
 
   try {
     return (
@@ -64,7 +66,7 @@ export default function App() {
               <Route path="/social-media" element={<SocialMediaMonitoring />} />
               <Route path="/donations" element={<DonationManagement />} />
               <Route path="/volunteer-registration" element={<VolunteerRegistration />} />
-              <Route path="/map" element={<MapViewPage />} />
+              <Route path="/map" element={<div style={{ position: 'relative' }}><MapViewPage selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation} /></div>} />
               <Route path="/settings" element={<Settings />} />
             </Routes>
           </div>

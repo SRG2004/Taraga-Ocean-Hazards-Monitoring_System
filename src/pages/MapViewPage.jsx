@@ -1,10 +1,11 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import InteractiveMap from '../components/InteractiveMap';
+import CreateReportForm from '../components/CreateReportForm';
 import { useApp } from '../contexts/AppContext';
 import './MapViewPage.css';
 
-const MapViewPage = () => {
+const MapViewPage = ({ selectedLocation, setSelectedLocation }) => {
   const navigate = useNavigate();
   const { reports, loadReports, reportsLoading } = useApp();
   const [mapFilters, setMapFilters] = useState({
@@ -12,6 +13,7 @@ const MapViewPage = () => {
     type: 'all',
     timeRange: '24h'
   });
+  const [isReportFormOpen, setIsReportFormOpen] = useState(false);
 
   useEffect(() => {
     if (reports.length === 0) {
@@ -26,7 +28,19 @@ const MapViewPage = () => {
 
   const handleMapClick = (event) => {
     console.log('Map clicked at:', event.latlng);
-    // You could open a new report form here
+    setSelectedLocation(event.latlng);
+    setIsReportFormOpen(true);
+  };
+
+  const handleReportFormClose = () => {
+    setIsReportFormOpen(false);
+    setSelectedLocation(null);
+  };
+
+  const handleReportFormSuccess = (newReport) => {
+    setIsReportFormOpen(false);
+    setSelectedLocation(null);
+    loadReports(); // Refresh reports after successful submission
   };
 
   const filteredReports = reports.filter(report => {
@@ -69,6 +83,12 @@ const MapViewPage = () => {
               onClick={() => navigate('/')}
             >
               🏠 Home
+            </button>
+            <button 
+              className="header-button report-button"
+              onClick={() => setIsReportFormOpen(true)}
+            >
+              + Report a Hazard
             </button>
             <button 
               className="header-button"
@@ -141,8 +161,17 @@ const MapViewPage = () => {
           onMapClick={handleMapClick}
           height="600px"
           showHeatmap={true}
+          selectedLocation={selectedLocation}
         />
       </section>
+
+      {isReportFormOpen && (
+        <CreateReportForm
+          onClose={handleReportFormClose}
+          onSuccess={handleReportFormSuccess}
+          initialLocation={selectedLocation}
+        />
+      )}
 
       {/* Quick Stats */}
       <section className="quick-stats">

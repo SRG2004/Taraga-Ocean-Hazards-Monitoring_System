@@ -97,7 +97,8 @@ const InteractiveMap = ({
   center = [13.0827, 80.2707], // Chennai coordinates
   zoom = 8,
   height = '500px',
-  enableRealTime = true
+  enableRealTime = true,
+  selectedLocation = null
 }) => {
   const [mapCenter, setMapCenter] = useState(center);
   const [mapZoom, setMapZoom] = useState(zoom);
@@ -334,6 +335,12 @@ const InteractiveMap = ({
             </Circle>
           ))}
 
+          {/* Selected Location Marker */}
+          {selectedLocation && (
+            <Marker position={[selectedLocation.lat, selectedLocation.lng]}>
+              <Popup>Selected Location</Popup>
+            </Marker>
+          )}
 
           {/* Removed synthetic hotspots */}
 

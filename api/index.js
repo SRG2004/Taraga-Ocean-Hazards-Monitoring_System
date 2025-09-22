@@ -20,6 +20,7 @@ import notificationRoutes from '../routes/notifications.js';
 
 // Import middleware
 import { authenticateToken } from '../middleware/auth.js';
+import { startSocialMediaMonitoring } from '../services/socialMediaService.js';
 
 const app = express();
 
@@ -62,6 +63,9 @@ app.use(express.urlencoded({ extended: true, limit: '10mb' }));
 
 // Apply rate limiting to API routes
 app.use(limiter);
+
+// Start social media monitoring
+startSocialMediaMonitoring();
 
 /**
  * API Routes
