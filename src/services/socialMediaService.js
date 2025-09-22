@@ -44,11 +44,11 @@ export const socialMediaService = {
       return [];
     }
 
-    const query = '(
+    const query = `(
       tsunami OR cyclone OR "ocean hazard" OR "marine emergency" OR "coastal warning" OR "storm surge" OR flood OR monsoon OR "high tide"
     ) AND (
       India OR "Indian Ocean" OR "Bay of Bengal" OR "Arabian Sea" OR Mumbai OR Chennai OR Kolkata OR Kerala OR "Tamil Nadu" OR Odisha OR Gujarat
-    ) -is:retweet';
+    ) -is:retweet`;
 
     try {
       const response = await axios.get('https://api.twitter.com/2/tweets/search/recent', {
