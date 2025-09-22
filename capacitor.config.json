@@ -1,7 +1,7 @@
 {
   "appId": "com.incois.taranga",
   "appName": "Taranga",
-  "webDir": "dist",
+  "webDir": "build",
   "server": {
     "androidScheme": "https"
   },
