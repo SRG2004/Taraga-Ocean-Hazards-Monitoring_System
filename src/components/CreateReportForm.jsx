@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { hazardReportService } from '../services/hazardReportService';
 import { useApp } from '../contexts/AppContext';
+import toast from 'react-hot-toast';
 import './CreateReportForm.css';
 
 const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
@@ -16,6 +17,13 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
     locationAddress: '',
     mediaFiles: []
   });
+
+  useEffect(() => {
+    if (initialLocation && initialLocation.lat && initialLocation.lng) {
+      setFormData(prev => ({ ...prev, coordinates: initialLocation }));
+      fetchAddressForCoords(initialLocation);
+    }
+  }, [initialLocation]);
 
   const hazardTypes = [
     { value: 'tsunami', label: 'Tsunami' },
@@ -37,7 +45,20 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
     { value: 'critical', label: 'Critical/Emergency', color: '#7c2d12' }
   ];
 
-  // Get current location
+  const fetchAddressForCoords = async (coords) => {
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
+      );
+      const data = await response.json();
+      if (data.display_name) {
+        setFormData(prev => ({ ...prev, locationAddress: data.display_name }));
+      }
+    } catch (error) {
+      console.warn('Could not get address for coords:', error);
+    }
+  };
+
   const getCurrentLocation = () => {
     setLocationLoading(true);
     if (navigator.geolocation) {
@@ -48,123 +69,99 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
             lng: position.coords.longitude
           };
           setFormData(prev => ({ ...prev, coordinates: coords }));
-          
-          // Try to get address from coordinates
-          try {
-            const response = await fetch(
-              `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
-            );
-            const data = await response.json();
-            if (data.display_name) {
-              setFormData(prev => ({ ...prev, locationAddress: data.display_name }));
-            }
-          } catch (error) {
-            console.log('Could not get address:', error);
-          }
-          
+          await fetchAddressForCoords(coords);
           setLocationLoading(false);
+          toast.success('Location captured!');
         },
         (error) => {
           console.error('Error getting location:', error);
-          alert('Unable to get your current location. Please enter location manually.');
+          toast.error('Unable to get your location. Please select it on the map or enter details manually.');
           setLocationLoading(false);
         },
         { enableHighAccuracy: true, timeout: 10000, maximumAge: 0 }
       );
     } else {
-      alert('Geolocation is not supported by this browser.');
+      toast.error('Geolocation is not supported by this browser.');
       setLocationLoading(false);
     }
   };
 
-  // Handle form input changes
   const handleInputChange = (e) => {
     const { name, value } = e.target;
     setFormData(prev => ({ ...prev, [name]: value }));
   };
 
-  // Handle image file selection
   const handleImageChange = (e) => {
     const files = Array.from(e.target.files);
     setFormData(prev => ({ ...prev, mediaFiles: files }));
   };
 
-  // Handle form submission
+  const extractLocationDetails = async (coords) => {
+    if (!coords) return { state: '', district: '' };
+    try {
+      const response = await fetch(
+        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
+      );
+      const data = await response.json();
+      return {
+          state: data.address?.state || '',
+          district: data.address?.state_district || ''
+      };
+    } catch (error) {
+      console.error('Error getting location details from coords:', error);
+      return { state: '', district: '' };
+    }
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     
-    if (!formData.coordinates) {
-      alert('Please provide location information.');
+    if (!formData.coordinates || typeof formData.coordinates.lat === 'undefined' || typeof formData.coordinates.lng === 'undefined') {
+      toast.error('Location is missing. Please use "Use Current Location" or click on the map to set a location.');
       return;
     }
 
     if (!formData.description.trim()) {
-      alert('Please provide a description of the hazard.');
+      toast.error('Please provide a description of the hazard.');
       return;
     }
 
     setLoading(true);
+    const toastId = toast.loading('Submitting your report...');
 
     try {
+      const locationDetails = await extractLocationDetails(formData.coordinates);
+
       const reportData = {
         ...formData,
         userId: user?.uid || 'anonymous',
         reporterName: user?.displayName || 'Anonymous User',
         reporterEmail: user?.email || '',
-        reporterPhone: '', // You can add phone field if needed
         location: {
           latitude: formData.coordinates.lat,
           longitude: formData.coordinates.lng,
           address: formData.locationAddress,
-          state: await extractStateFromCoords(formData.coordinates),
-          district: await extractDistrictFromCoords(formData.coordinates)
+          state: locationDetails.state,
+          district: locationDetails.district
         }
       };
 
       const result = await hazardReportService.submitReport(reportData);
       
       if (result.success) {
-        alert('Report submitted successfully!');
-        onSuccess && onSuccess(result);
+        toast.success('Report submitted successfully!', { id: toastId });
+        onSuccess && onSuccess(result.data);
         onClose && onClose();
+      } else {
+        throw new Error('Submission failed for an unknown reason.');
       }
     } catch (error) {
       console.error('Error submitting report:', error);
-      alert('Failed to submit report. Please try again.');
+      toast.error(`Submission failed: ${error.message}. Please try again.`, { id: toastId });
     } finally {
       setLoading(false);
     }
   };
-
-  // Helper functions to extract location info from coordinates
-  const extractStateFromCoords = async (coords) => {
-    if (!coords) return '';
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
-      );
-      const data = await response.json();
-      return data.address?.state || '';
-    } catch (error) {
-      console.error('Error getting state from coords:', error);
-      return '';
-    }
-  };
-
-  const extractDistrictFromCoords = async (coords) => {
-    if (!coords) return '';
-    try {
-      const response = await fetch(
-        `https://nominatim.openstreetmap.org/reverse?format=json&lat=${coords.lat}&lon=${coords.lng}`
-      );
-      const data = await response.json();
-      return data.address?.state_district || '';
-    } catch (error) {
-      console.error('Error getting district from coords:', error);
-      return '';
-    }
-  };
-
 
   return (
     <div className="create-report-modal">
@@ -176,10 +173,8 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
         </div>
 
         <form onSubmit={handleSubmit} className="report-form">
-          {/* Basic Information */}
           <div className="form-section">
             <h3>Basic Information</h3>
-            
             <div className="form-group">
               <label htmlFor="title">Report Title</label>
               <input
@@ -192,7 +187,6 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
                 maxLength={100}
               />
             </div>
-
             <div className="form-group">
               <label htmlFor="type">Hazard Type *</label>
               <select
@@ -209,7 +203,6 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
                 ))}
               </select>
             </div>
-
             <div className="form-group">
               <label htmlFor="severity">Severity Level *</label>
               <select
@@ -226,7 +219,6 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
                 ))}
               </select>
             </div>
-
             <div className="form-group">
               <label htmlFor="description">Description *</label>
               <textarea
@@ -243,10 +235,8 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
             </div>
           </div>
 
-          {/* Location */}
           <div className="form-section">
             <h3>Location</h3>
-            
             <div className="location-controls">
               <button
                 type="button"
@@ -256,7 +246,6 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
               >
                 {locationLoading ? '📍 Getting Location...' : '📍 Use Current Location'}
               </button>
-              
               {formData.coordinates && (
                 <div className="coordinates-display">
                   <p>📍 Lat: {formData.coordinates.lat.toFixed(6)}, Lng: {formData.coordinates.lng.toFixed(6)}</p>
@@ -266,7 +255,6 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
                 </div>
               )}
             </div>
-
             <div className="form-group">
               <label htmlFor="locationAddress">Location Details</label>
               <input
@@ -280,10 +268,8 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
             </div>
           </div>
 
-          {/* Media Upload */}
           <div className="form-section">
             <h3>Photos/Videos (Optional)</h3>
-            
             <div className="form-group">
               <label htmlFor="mediaFiles">Upload Images/Videos</label>
               <input
@@ -295,7 +281,6 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
                 className="file-input"
               />
               <small>Supported formats: JPG, PNG, MP4, MOV (Max 5 files, 10MB each)</small>
-              
               {formData.mediaFiles.length > 0 && (
                 <div className="file-preview">
                   {Array.from(formData.mediaFiles).map((file, index) => (
@@ -308,7 +293,6 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
             </div>
           </div>
 
-          {/* Submit */}
           <div className="form-actions">
             <button type="button" onClick={onClose} className="cancel-button">
               Cancel
