@@ -20,6 +20,7 @@ import {
 } from 'firebase/firestore';
 import { firestore } from '../config/database.js';
 import { authenticateToken, authorizeRoles } from '../middleware/auth.js';
+import { getActiveBulletins } from '../services/flashBulletinService.js';
 
 const router = express.Router();
 
@@ -505,6 +506,30 @@ router.post('/test', authenticateToken, async (req, res) => {
     console.error('Send test notification error:', error);
     res.status(500).json({
       error: 'Failed to send test notification'
+    });
+  }
+});
+
+/**
+ * GET /api/notifications/flash-bulletins
+ * Get active flash bulletins for homepage display
+ */
+router.get('/flash-bulletins', async (req, res) => {
+  try {
+    const bulletins = await getActiveBulletins();
+    
+    res.json({
+      bulletins,
+      count: bulletins.length,
+      lastUpdated: new Date().toISOString()
+    });
+
+  } catch (error) {
+    console.error('Get flash bulletins error:', error);
+    res.status(500).json({
+      error: 'Failed to get flash bulletins',
+      bulletins: [], // Return empty array as fallback
+      count: 0
     });
   }
 });

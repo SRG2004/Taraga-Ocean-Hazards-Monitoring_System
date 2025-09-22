@@ -1,6 +1,7 @@
 import React, { useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
+import FlashBulletin from '../components/FlashBulletin';
 import './HomePage.css';
 
 const HomePage = () => {
@@ -171,6 +172,9 @@ const HomePage = () => {
             </p>
           </div>
         </section>
+
+        {/* Flash Bulletins */}
+        <FlashBulletin />
 
         {/* Quick Actions */}
         <section className="quick-actions-section">
