@@ -111,10 +111,7 @@ const InteractiveMap = ({
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Synthetic data state
-  const [syntheticReports, setSyntheticReports] = useState([]);
-  const [syntheticHotspots, setSyntheticHotspots] = useState([]);
-  const [showSyntheticData, setShowSyntheticData] = useState(true);
+  // Removed synthetic data functionality as requested
   // Load reports from API
   const loadReports = async (filters = {}) => {
     try {
@@ -169,93 +166,7 @@ const InteractiveMap = ({
     setAlerts(propAlerts);
   }, [propAlerts]);
 
-  // Load initial synthetic reports and generate hotspots
-  useEffect(() => {
-    const loadSyntheticReports = async () => {
-      try {
-        const syntheticData = await socialMediaService.syntheticReports.getReports();
-        setSyntheticReports(syntheticData);
-        generateSyntheticHotspots(syntheticData);
-      } catch (error) {
-        console.error('Error loading synthetic reports:', error);
-      }
-    };
-
-    loadSyntheticReports();
-  }, []);
-
-  // Handle synthetic reports
-  const handleSyntheticReports = (reports) => {
-    setSyntheticReports(prev => [...reports, ...prev].slice(0, 100)); // Keep last 100
-    generateSyntheticHotspots([...syntheticReports, ...reports]);
-  };
-
-  // Generate hotspots from synthetic reports
-  const generateSyntheticHotspots = (reports) => {
-    const hotspots = [];
-    const locationGroups = {};
-
-    // Group reports by proximity (within ~50km)
-    reports.forEach(report => {
-      if (report.location && report.location.lat && report.location.lng) {
-        const key = `${Math.round(report.location.lat * 10) / 10}_${Math.round(report.location.lng * 10) / 10}`;
-        if (!locationGroups[key]) {
-          locationGroups[key] = [];
-        }
-        locationGroups[key].push(report);
-      }
-    });
-
-    // Create hotspots from grouped locations
-    Object.values(locationGroups).forEach(group => {
-      if (group.length >= 2) { // At least 2 reports to form a hotspot
-        const avgLat = group.reduce((sum, r) => sum + r.location.lat, 0) / group.length;
-        const avgLng = group.reduce((sum, r) => sum + r.location.lng, 0) / group.length;
-
-        const criticalCount = group.filter(r => r.severity === 'critical').length;
-        const highCount = group.filter(r => r.severity === 'high').length;
-        const negativeCount = group.filter(r => r.sentiment?.label === 'negative').length;
-
-        let intensity = 'low';
-        if (criticalCount > 0 || highCount >= 2) intensity = 'high';
-        else if (highCount > 0 || negativeCount >= 3) intensity = 'medium';
-
-        hotspots.push({
-          id: `synthetic_hotspot_${Math.random().toString(36).substr(2, 9)}`,
-          center: [avgLat, avgLng],
-          intensity,
-          reportCount: group.length,
-          radius: Math.min(50000, group.length * 15000), // Max 50km radius
-          reports: group.map(r => r.id),
-          dominantTypes: [...new Set(group.map(r => r.hazardType))],
-          lastUpdated: new Date().toISOString(),
-          isSynthetic: true
-        });
-      }
-    });
-
-    setSyntheticHotspots(hotspots);
-  };
-
-  // Listen for synthetic reports
-  useEffect(() => {
-    const handleNewSyntheticReport = (report) => {
-      handleSyntheticReports([report]);
-    };
-
-    // Listen for socket events if available
-    if (window.socket) {
-      window.socket.on('synthetic-social-media-post', handleNewSyntheticReport);
-      window.socket.on('synthetic-social-media-posts', handleSyntheticReports);
-    }
-
-    return () => {
-      if (window.socket) {
-        window.socket.off('synthetic-social-media-post', handleNewSyntheticReport);
-        window.socket.off('synthetic-social-media-posts', handleSyntheticReports);
-      }
-    };
-  }, [syntheticReports]);
+  // Removed all synthetic report functionality as requested
 
 
 
@@ -315,22 +226,7 @@ const InteractiveMap = ({
           </label>
 
 
-          {/* Synthetic Data Controls */}
-          <div className="synthetic-controls">
-            <h5>Synthetic Data</h5>
-            <label>
-              <input
-                type="checkbox"
-                checked={showSyntheticData}
-                onChange={() => setShowSyntheticData(!showSyntheticData)}
-              />
-              Show Synthetic Hotspots
-            </label>
-            <div className="synthetic-stats">
-              <small>Synthetic Reports: {syntheticReports.length}</small>
-              <small>Synthetic Hotspots: {syntheticHotspots.length}</small>
-            </div>
-          </div>
+          {/* Removed synthetic data controls */}
 
         </div>
         
@@ -439,31 +335,7 @@ const InteractiveMap = ({
           ))}
 
 
-          {/* Synthetic Hotspots */}
-          {showSyntheticData && syntheticHotspots.map((hotspot) => (
-            <Circle
-              key={hotspot.id}
-              center={hotspot.center}
-              radius={hotspot.radius}
-              fillColor={getHazardColor(hotspot.intensity)}
-              fillOpacity={0.4}
-              color={getHazardColor(hotspot.intensity)}
-              weight={3}
-              dashArray="10, 10"
-            >
-              <Popup>
-                <div className="map-popup synthetic-popup">
-                  <h4>🤖 Synthetic Hotspot</h4>
-                  <p><strong>Intensity:</strong> {hotspot.intensity}</p>
-                  <p><strong>Reports:</strong> {hotspot.reportCount}</p>
-                  <p><strong>Types:</strong> {hotspot.dominantTypes.join(', ')}</p>
-                  <p><strong>Radius:</strong> {(hotspot.radius / 1000).toFixed(1)} km</p>
-                  <p><strong>Updated:</strong> {new Date(hotspot.lastUpdated).toLocaleTimeString()}</p>
-                  <small className="synthetic-note">Generated from synthetic social media reports</small>
-                </div>
-              </Popup>
-            </Circle>
-          ))}
+          {/* Removed synthetic hotspots */}
 
         </MapContainer>
       </div>
@@ -486,19 +358,7 @@ const InteractiveMap = ({
         </div>
 
 
-        {/* Synthetic Data Stats */}
-        {showSyntheticData && (
-          <>
-            <div className="stat-item synthetic">
-              <span className="stat-value">{syntheticReports.length}</span>
-              <span className="stat-label">Synthetic Reports</span>
-            </div>
-            <div className="stat-item synthetic">
-              <span className="stat-value">{syntheticHotspots.length}</span>
-              <span className="stat-label">Synthetic Hotspots</span>
-            </div>
-          </>
-        )}
+        {/* Removed synthetic data stats */}
 
 
         {loading && (

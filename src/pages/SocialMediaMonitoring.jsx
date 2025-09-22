@@ -12,15 +12,7 @@ const SocialMediaMonitoring = () => {
     relevance: 50
   });
 
-  // Synthetic report state
-  const [syntheticEnabled, setSyntheticEnabled] = useState(false);
-  const [syntheticStats, setSyntheticStats] = useState({
-    isEnabled: false,
-    reportCount: 0,
-    isGenerating: false
-  });
-  const [syntheticPosts, setSyntheticPosts] = useState([]);
-  const [showSyntheticOnly, setShowSyntheticOnly] = useState(false);
+  // Removed synthetic report functionality as requested
 
   const sentimentStats = {
     positive: 0,
@@ -102,56 +94,10 @@ const SocialMediaMonitoring = () => {
     }
   ];
 
-  // Synthetic report handlers
-  const handleToggleSyntheticGeneration = () => {
-    if (syntheticEnabled) {
-      socialMediaService.syntheticReports.stopGeneration();
-      setSyntheticEnabled(false);
-    } else {
-      socialMediaService.syntheticReports.startGeneration(2, 2); // 2 posts every 2 minutes
-      setSyntheticEnabled(true);
-    }
-  };
-
-  const handleGenerateSyntheticReports = async (count = 3) => {
-    try {
-      const posts = await socialMediaService.syntheticReports.generateReports(count);
-      setSyntheticPosts(prev => [...posts, ...prev].slice(0, 50)); // Keep last 50
-    } catch (error) {
-      console.error('Error generating synthetic reports:', error);
-      alert('Error generating synthetic reports. Please check console for details.');
-    }
-  };
-
-  const handleGenerateHazardScenario = async (hazardType, location, severity) => {
-    try {
-      const posts = await socialMediaService.syntheticReports.generateHazardScenario(
-        hazardType,
-        location,
-        severity,
-        2
-      );
-      setSyntheticPosts(prev => [...posts, ...prev].slice(0, 50));
-    } catch (error) {
-      console.error('Error generating hazard scenario:', error);
-      alert('Error generating hazard scenario. Please check console for details.');
-    }
-  };
-
-  // Filter posts based on synthetic filter
-  const filteredPosts = showSyntheticOnly
-    ? syntheticPosts
-    : [...socialMediaPosts, ...syntheticPosts];
-
-  // Update synthetic stats periodically
-  useEffect(() => {
-    const interval = setInterval(() => {
-      const stats = socialMediaService.syntheticReports.getStats();
-      setSyntheticStats(stats);
-    }, 1000);
-
-    return () => clearInterval(interval);
-  }, []);
+  // Removed synthetic report handlers as requested
+  
+  // Use only real social media posts (no synthetic data)
+  const filteredPosts = socialMediaPosts;
 
   return (
     <div className="social-media-monitoring">
@@ -173,39 +119,7 @@ const SocialMediaMonitoring = () => {
           </div>
         </div>
 
-        {/* Synthetic Report Controls */}
-        <div className="synthetic-controls">
-          <div className="control-group">
-            <label className="control-label">Synthetic Reports</label>
-            <button
-              className={`synthetic-toggle ${syntheticEnabled ? 'active' : ''}`}
-              onClick={handleToggleSyntheticGeneration}
-            >
-              {syntheticEnabled ? '🟢 Stop Generation' : '🔴 Start Generation'}
-            </button>
-            <button
-              className="generate-button"
-              onClick={() => handleGenerateSyntheticReports(3)}
-            >
-              Generate 3 Posts
-            </button>
-            <button
-              className="synthetic-filter-toggle"
-              onClick={() => setShowSyntheticOnly(!showSyntheticOnly)}
-            >
-              {showSyntheticOnly ? 'Show All' : 'Synthetic Only'}
-            </button>
-          </div>
-
-          <div className="synthetic-stats">
-            <span className="stat-item">
-              Generated: {syntheticStats.reportCount}
-            </span>
-            <span className="stat-item">
-              Status: {syntheticStats.isGenerating ? 'Active' : 'Inactive'}
-            </span>
-          </div>
-        </div>
+        {/* Removed synthetic report controls as requested */}
       </header>
 
       <main className="monitoring-main">
@@ -321,7 +235,6 @@ const SocialMediaMonitoring = () => {
         <section className="posts-section">
           <h2 className="section-title">
             Social Media Posts ({filteredPosts.length})
-            {showSyntheticOnly && <span className="synthetic-indicator"> [Synthetic Only]</span>}
           </h2>
           <div className="posts-list">
             {filteredPosts.map((post) => (
@@ -330,7 +243,7 @@ const SocialMediaMonitoring = () => {
                   <div className="post-source">
                     <span className="platform-name">{post.platform}</span>
                     {post.verified && <span className="verified-badge">✓</span>}
-                    {post.isSynthetic && <span className="synthetic-badge">🤖</span>}
+                    {/* Removed synthetic badge */}
                   </div>
                   <div className="post-meta">
                     <span className={`sentiment-badge ${post.sentiment.toLowerCase()}`}>
