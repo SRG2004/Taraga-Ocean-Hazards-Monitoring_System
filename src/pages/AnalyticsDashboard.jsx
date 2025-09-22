@@ -253,7 +253,7 @@ const AnalyticsDashboard = () => {
           {/* Hazard Trends */}
           <section className="hazard-trends">
             <h2 className="section-title">Hazard Trends Analysis</h2>
-            <div className.jsx-list">
+            <div className="trends-list">
               {hazardTrends.map((hazard, index) => (
                 <div key={index} className="trend-item">
                   <div className="trend-info">
