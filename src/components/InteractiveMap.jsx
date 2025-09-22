@@ -15,7 +15,7 @@ Icon.Default.mergeOptions({
 });
 
 // Custom icons for different hazard types
-const createCustomIcon = (color, type) => {
+const createCustomIcon = (color) => {
   const svgContent = `
     <svg width="30" height="40" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg">
       <path d="M15 0C6.7 0 0 6.7 0 15c0 15 15 25 15 25s15-10 15-25C30 6.7 23.3 0 15 0z" fill="${color}"/>
@@ -24,7 +24,7 @@ const createCustomIcon = (color, type) => {
     </svg>
   `.trim();
   
-  let encodedSvg = window.btoa(unescape(encodeURIComponent(svgContent)));
+  const encodedSvg = window.btoa(unescape(encodeURIComponent(svgContent)));
   
   return new Icon({
     iconUrl: `data:image/svg+xml;base64,${encodedSvg}`,
@@ -62,22 +62,21 @@ const InteractiveMap = ({
   onReportClick,
   onMapClick,
   showHeatmap = true,
-  center = [13.0827, 80.2707], // Chennai coordinates
-  zoom = 8,
-  height = '500px',
+  center = [20.5937, 78.9629], // India center
+  zoom = 5,
+  height = 'calc(100vh - 200px)',
   selectedLocation = null
 }) => {
   const [mapCenter, setMapCenter] = useState(center);
   const [mapZoom, setMapZoom] = useState(zoom);
   const [selectedLayers, setSelectedLayers] = useState({
     reports: true,
-    alerts: true,
     heatmap: showHeatmap
   });
-  
-  // Use sample data directly
-  const [reports, setReports] = useState(sampleHazardReports.filter(report => report.verifiedAt));
-  const [hotspots, setHotspots] = useState(generateHotspots(reports));
+
+  // Data is static, so no need for state. Filter verified reports and generate hotspots.
+  const reports = sampleHazardReports.filter(report => report.verifiedAt);
+  const hotspots = generateHotspots(reports);
 
   const handleLayerToggle = (layer) => {
     setSelectedLayers(prev => ({
@@ -92,13 +91,19 @@ const InteractiveMap = ({
       'mumbai': [19.0760, 72.8777],
       'kochi': [9.9312, 76.2673],
       'visakhapatnam': [17.6868, 83.2185],
-      'goa': [15.2993, 74.1240]
+      'goa': [15.2993, 74.1240],
+      'punjab': [31.53, 75.92],
+      'himachal': [31.83, 77.00],
+      'bihar': [25.61, 85.15],
     };
     
     const coords = locations[location.toLowerCase()];
     if (coords) {
       setMapCenter(coords);
       setMapZoom(10);
+    } else {
+      setMapCenter([20.5937, 78.9629]);
+      setMapZoom(5);
     }
   };
 
@@ -132,8 +137,12 @@ const InteractiveMap = ({
             defaultValue=""
           >
             <option value="">Quick Jump To...</option>
-            <option value="chennai">Chennai</option>
+            <option value="">All India</option>
+            <option value="punjab">Punjab</option>
+            <option value="himachal">Himachal Pradesh</option>
             <option value="mumbai">Mumbai</option>
+            <option value="chennai">Chennai</option>
+            <option value="bihar">Bihar</option>
             <option value="kochi">Kochi</option>
             <option value="visakhapatnam">Visakhapatnam</option>
             <option value="goa">Goa</option>
@@ -145,22 +154,10 @@ const InteractiveMap = ({
       <div className="map-legend">
         <h4>Legend</h4>
         <div className="legend-items">
-          <div className="legend-item">
-            <div className="legend-marker critical"></div>
-            <span>Critical Hazard</span>
-          </div>
-          <div className="legend-item">
-            <div className="legend-marker high"></div>
-            <span>High Risk</span>
-          </div>
-          <div className="legend-item">
-            <div className="legend-marker medium"></div>
-            <span>Medium Risk</span>
-          </div>
-          <div className="legend-item">
-            <div className="legend-marker low"></div>
-            <span>Low Risk</span>
-          </div>
+          <div className="legend-item"><div className="legend-marker" style={{backgroundColor: getHazardColor('critical')}}></div><span>Critical</span></div>
+          <div className="legend-item"><div className="legend-marker" style={{backgroundColor: getHazardColor('high')}}></div><span>High</span></div>
+          <div className="legend-item"><div className="legend-marker" style={{backgroundColor: getHazardColor('medium')}}></div><span>Medium</span></div>
+          <div className="legend-item"><div className="legend-marker" style={{backgroundColor: getHazardColor('low')}}></div><span>Low</span></div>
         </div>
       </div>
 
@@ -184,7 +181,7 @@ const InteractiveMap = ({
             <Marker
               key={report.id}
               position={[report.location.latitude, report.location.longitude]}
-              icon={createCustomIcon(getHazardColor(report.severity), report.type)}
+              icon={createCustomIcon(getHazardColor(report.severity))}
               eventHandlers={{
                 click: () => onReportClick && onReportClick(report)
               }}
@@ -196,12 +193,8 @@ const InteractiveMap = ({
                   <p><strong>Severity:</strong> {report.severity}</p>
                   <p><strong>Status:</strong> {report.status}</p>
                   <p><strong>Time:</strong> {new Date(report.reportedAt).toLocaleString()}</p>
-                  {report.description && (
-                    <p><strong>Details:</strong> {report.description}</p>
-                  )}
-                  {report.reportedBy && (
-                    <p><strong>Reported by:</strong> {report.reportedBy.name}</p>
-                  )}
+                  {report.description && <p><strong>Details:</strong> {report.description}</p>}
+                  {report.reportedBy && <p><strong>Reported by:</strong> {report.reportedBy.name}</p>}
                 </div>
               </Popup>
             </Marker>

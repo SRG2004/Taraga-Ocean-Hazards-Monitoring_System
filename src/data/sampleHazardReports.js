@@ -53,10 +53,12 @@ export const sampleHazardReports = [
       name: 'Himachal Pradesh DMA',
       type: 'official'
     },
-    reportedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
+    reportedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+    verifiedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    verifiedBy: 'admin@oceanhazard.com',
     tags: ['high', 'flash_flood', 'landslide', 'monsoon']
   },
-    {
+  {
     id: 'hr_2025_mumbai',
     title: 'Severe Urban & Coastal Flooding in Mumbai',
     type: 'flood',
@@ -75,7 +77,9 @@ export const sampleHazardReports = [
       name: 'Mumbai Resident',
       type: 'citizen'
     },
-    reportedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+    reportedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+    verifiedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(),
+    verifiedBy: 'officer@oceanhazard.com',
     tags: ['high', 'urban_flooding', 'tidal_surge', 'mumbai_rains']
   },
   {
@@ -97,7 +101,9 @@ export const sampleHazardReports = [
       name: 'Greater Chennai Corporation',
       type: 'official'
     },
-    reportedAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
+    reportedAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(),
+    verifiedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+    verifiedBy: 'admin@oceanhazard.com',
     tags: ['high', 'coastal_flooding', 'chennai_rains']
   },
   {
@@ -119,7 +125,9 @@ export const sampleHazardReports = [
       name: 'Bihar Water Resource Dept.',
       type: 'official'
     },
-    reportedAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(), // 8 hours ago
+    reportedAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(),
+    verifiedAt: new Date(Date.now() - 7 * 60 * 60 * 1000).toISOString(),
+    verifiedBy: 'admin@oceanhazard.com',
     tags: ['high', 'river_flood', 'ganga', 'agriculture_loss']
   },
   {
