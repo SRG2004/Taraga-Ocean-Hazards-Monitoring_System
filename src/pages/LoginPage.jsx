@@ -164,7 +164,7 @@ const LoginPage = () => {
           <div className="account-options">
             <button 
               className="create-account-button"
-              onClick={() => navigate('/volunteer-registration')}
+              onClick={() => navigate('/register')}
             >
               Create General Account
             </button>

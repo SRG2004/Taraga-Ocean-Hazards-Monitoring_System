@@ -1,9 +1,13 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
+import { useApp } from '../contexts/AppContext';
+import toast from 'react-hot-toast';
 import './VolunteerRegistration.css';
 
 const VolunteerRegistration = () => {
   const navigate = useNavigate();
+  const { registerVolunteer } = useApp();
+  const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     fullName: '',
     email: '',
@@ -13,11 +17,18 @@ const VolunteerRegistration = () => {
     availability: 'Weekends'
   });
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    console.log('Registration submitted:', formData);
-    // In a real app, this would submit to your backend
-    navigate('/citizen');
+    setLoading(true);
+    try {
+      await registerVolunteer(formData);
+      toast.success('Volunteer registration successful!');
+      navigate('/login'); // Redirect to login after registration
+    } catch (error) {
+      toast.error(error.message || 'Failed to register volunteer.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const handleInputChange = (e) => {
@@ -128,8 +139,8 @@ const VolunteerRegistration = () => {
               </div>
             </div>
 
-            <button type="submit" className="register-button">
-              Register as Citizen
+            <button type="submit" className="register-button" disabled={loading}>
+              {loading ? 'Registering...' : 'Register as Volunteer'}
             </button>
           </form>
 
