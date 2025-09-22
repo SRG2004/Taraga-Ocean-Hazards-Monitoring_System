@@ -4,9 +4,7 @@ import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-le
 import { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './InteractiveMap.css';
-import { hazardReportService } from '../services/hazardReportService';
-import { socialMediaService } from '../services/socialMediaService';
-
+import { sampleHazardReports, generateHotspots } from '../data/sampleHazardReports';
 
 // Fix for default markers in react-leaflet
 delete Icon.Default.prototype._getIconUrl;
@@ -16,15 +14,8 @@ Icon.Default.mergeOptions({
   shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png'
 });
 
-
 // Custom icons for different hazard types
 const createCustomIcon = (color, type) => {
-  const iconHtml = `
-    <div class="custom-marker" style="background-color: ${color};">
-      <div class="marker-content">${getHazardIcon(type)}</div>
-    </div>
-  `;
-  
   const svgContent = `
     <svg width="30" height="40" viewBox="0 0 30 40" xmlns="http://www.w3.org/2000/svg">
       <path d="M15 0C6.7 0 0 6.7 0 15c0 15 15 25 15 25s15-10 15-25C30 6.7 23.3 0 15 0z" fill="${color}"/>
@@ -33,14 +24,7 @@ const createCustomIcon = (color, type) => {
     </svg>
   `.trim();
   
-  // Use window.btoa with error handling for non-Latin1 characters
-  let encodedSvg;
-  try {
-    encodedSvg = window.btoa(unescape(encodeURIComponent(svgContent)));
-  } catch (e) {
-    // Fallback for encoding issues
-    encodedSvg = window.btoa(svgContent.replace(/[^\x00-\x7F]/g, "!"));
-  }
+  let encodedSvg = window.btoa(unescape(encodeURIComponent(svgContent)));
   
   return new Icon({
     iconUrl: `data:image/svg+xml;base64,${encodedSvg}`,
@@ -48,20 +32,6 @@ const createCustomIcon = (color, type) => {
     iconAnchor: [15, 40],
     popupAnchor: [0, -40]
   });
-};
-
-const getHazardIcon = (type) => {
-  const icons = {
-    tsunami: '🌊',
-    cyclone: '🌀',
-    storm: '⛈️',
-    flood: '🌊',
-    high_waves: '🌊',
-    strong_currents: '🌊',
-    coastal_erosion: '🏖️',
-    default: '⚠️'
-  };
-  return icons[type] || icons.default;
 };
 
 const getHazardColor = (severity) => {
@@ -89,15 +59,12 @@ const MapUpdater = ({ center, zoom }) => {
 };
 
 const InteractiveMap = ({
-  reports: propReports = [],
-  alerts: propAlerts = [],
   onReportClick,
   onMapClick,
   showHeatmap = true,
   center = [13.0827, 80.2707], // Chennai coordinates
   zoom = 8,
   height = '500px',
-  enableRealTime = true,
   selectedLocation = null
 }) => {
   const [mapCenter, setMapCenter] = useState(center);
@@ -107,69 +74,10 @@ const InteractiveMap = ({
     alerts: true,
     heatmap: showHeatmap
   });
-  const [reports, setReports] = useState(propReports);
-  const [alerts, setAlerts] = useState(propAlerts);
-  const [loading, setLoading] = useState(false);
-  const [error, setError] = useState(null);
-
-  // Removed synthetic data functionality as requested
-  // Load reports from API
-  const loadReports = async (filters = {}) => {
-    try {
-      setLoading(true);
-      setError(null);
-      const fetchedReports = await hazardReportService.getReports(filters);
-      setReports(fetchedReports);
-    } catch (err) {
-      console.error('Error loading reports:', err);
-      setError('Failed to load hazard reports');
-      // Fallback to prop reports if available
-      if (propReports.length > 0) {
-        setReports(propReports);
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
-
-  // Load nearby reports based on current map center
-  const loadNearbyReports = async (lat, lng, radius = 50) => {
-    try {
-      const nearbyReports = await hazardReportService.getReportsByLocation(lat, lng, radius);
-      setReports(nearbyReports);
-    } catch (err) {
-      console.error('Error loading nearby reports:', err);
-    }
-  };
-
-  // Set up real-time updates
-  useEffect(() => {
-    if (enableRealTime) {
-      const unsubscribe = hazardReportService.subscribeToReports((updatedReports) => {
-        setReports(updatedReports);
-      });
-
-      return unsubscribe;
-    }
-  }, [enableRealTime]);
-
-  // Load initial data
-  useEffect(() => {
-    if (propReports.length === 0) {
-      loadReports();
-    } else {
-      setReports(propReports);
-    }
-  }, [propReports]);
-
-  // Update alerts when prop changes
-  useEffect(() => {
-    setAlerts(propAlerts);
-  }, [propAlerts]);
-
-  // Removed all synthetic report functionality as requested
-
-
+  
+  // Use sample data directly
+  const [reports, setReports] = useState(sampleHazardReports.filter(report => report.verifiedAt));
+  const [hotspots, setHotspots] = useState(generateHotspots(reports));
 
   const handleLayerToggle = (layer) => {
     setSelectedLayers(prev => ({
@@ -179,7 +87,6 @@ const InteractiveMap = ({
   };
 
   const handleLocationSearch = (location) => {
-    // Simple location search - in a real app, use geocoding service
     const locations = {
       'chennai': [13.0827, 80.2707],
       'mumbai': [19.0760, 72.8777],
@@ -212,23 +119,11 @@ const InteractiveMap = ({
           <label>
             <input
               type="checkbox"
-              checked={selectedLayers.alerts}
-              onChange={() => handleLayerToggle('alerts')}
-            />
-            Alert Zones
-          </label>
-          <label>
-            <input
-              type="checkbox"
               checked={selectedLayers.heatmap}
               onChange={() => handleLayerToggle('heatmap')}
             />
             Density Heatmap
           </label>
-
-
-          {/* Removed synthetic data controls */}
-
         </div>
         
         <div className="location-search">
@@ -279,17 +174,16 @@ const InteractiveMap = ({
         >
           <MapUpdater center={mapCenter} zoom={mapZoom} />
           
-          {/* Base tile layer */}
           <TileLayer
             url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
             attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
           />
 
           {/* Hazard Reports */}
-          {selectedLayers.reports && reports.filter(report => report.coordinates && report.coordinates.lat && report.coordinates.lng).map((report) => (
+          {selectedLayers.reports && reports.map((report) => (
             <Marker
               key={report.id}
-              position={[report.coordinates.lat, report.coordinates.lng]}
+              position={[report.location.latitude, report.location.longitude]}
               icon={createCustomIcon(getHazardColor(report.severity), report.type)}
               eventHandlers={{
                 click: () => onReportClick && onReportClick(report)
@@ -301,35 +195,35 @@ const InteractiveMap = ({
                   <p><strong>Type:</strong> {report.type.replace('_', ' ')}</p>
                   <p><strong>Severity:</strong> {report.severity}</p>
                   <p><strong>Status:</strong> {report.status}</p>
-                  <p><strong>Time:</strong> {new Date(report.createdAt).toLocaleString()}</p>
+                  <p><strong>Time:</strong> {new Date(report.reportedAt).toLocaleString()}</p>
                   {report.description && (
                     <p><strong>Details:</strong> {report.description}</p>
                   )}
-                  {report.userInfo && (
-                    <p><strong>Reported by:</strong> {report.userInfo.name}</p>
+                  {report.reportedBy && (
+                    <p><strong>Reported by:</strong> {report.reportedBy.name}</p>
                   )}
                 </div>
               </Popup>
             </Marker>
           ))}
 
-          {/* Alert Zones */}
-          {selectedLayers.alerts && alerts.filter(alert => alert.coordinates && alert.coordinates.lat && alert.coordinates.lng).map((alert) => (
+          {/* Hotspots */}
+          {selectedLayers.heatmap && hotspots.map((hotspot) => (
             <Circle
-              key={alert.id}
-              center={[alert.coordinates.lat, alert.coordinates.lng]}
-              radius={alert.radius}
-              fillColor={getHazardColor(alert.severity)}
-              fillOpacity={0.3}
-              color={getHazardColor(alert.severity)}
+              key={hotspot.id}
+              center={hotspot.center}
+              radius={hotspot.radius}
+              fillColor={getHazardColor(hotspot.intensity)}
+              fillOpacity={0.4}
+              color={getHazardColor(hotspot.intensity)}
               weight={2}
             >
               <Popup>
                 <div className="map-popup">
-                  <h4>Alert Zone</h4>
-                  <p><strong>Type:</strong> {alert.type}</p>
-                  <p><strong>Message:</strong> {alert.message}</p>
-                  <p><strong>Radius:</strong> {(alert.radius / 1000).toFixed(1)} km</p>
+                  <h4>Hazard Hotspot</h4>
+                  <p><strong>Intensity:</strong> {hotspot.intensity}</p>
+                  <p><strong>Reports:</strong> {hotspot.reportCount}</p>
+                  <p><strong>Dominant Types:</strong> {hotspot.dominantTypes.join(', ')}</p>
                 </div>
               </Popup>
             </Circle>
@@ -342,8 +236,6 @@ const InteractiveMap = ({
             </Marker>
           )}
 
-          {/* Removed synthetic hotspots */}
-
         </MapContainer>
       </div>
 
@@ -351,11 +243,11 @@ const InteractiveMap = ({
       <div className="map-stats">
         <div className="stat-item">
           <span className="stat-value">{reports.length}</span>
-          <span className="stat-label">Active Reports</span>
+          <span className="stat-label">Verified Reports</span>
         </div>
         <div className="stat-item">
-          <span className="stat-value">{alerts.length}</span>
-          <span className="stat-label">Alert Zones</span>
+          <span className="stat-value">{hotspots.length}</span>
+          <span className="stat-label">Hotspots</span>
         </div>
         <div className="stat-item">
           <span className="stat-value">
@@ -363,23 +255,6 @@ const InteractiveMap = ({
           </span>
           <span className="stat-label">High Priority</span>
         </div>
-
-
-        {/* Removed synthetic data stats */}
-
-
-        {loading && (
-          <div className="stat-item">
-            <span className="stat-value">⟳</span>
-            <span className="stat-label">Loading...</span>
-          </div>
-        )}
-        {error && (
-          <div className="stat-item error">
-            <span className="stat-value">⚠️</span>
-            <span className="stat-label">Error</span>
-          </div>
-        )}
       </div>
     </div>
   );
