@@ -23,7 +23,8 @@ let monitoringStats = {
   lastUpdate: new Date(),
   platforms: {
     twitter: { posts: 0, mentions: 0 },
-    reddit: { posts: 0, mentions: 0 }
+    reddit: { posts: 0, mentions: 0 },
+    news: { posts: 0, mentions: 0 }
   }
 };
 
@@ -35,6 +36,7 @@ export const startSocialMediaMonitoring = async () => {
     try {
       await monitorTwitter();
       await monitorReddit();
+      await monitorNews();
       console.log('Social media monitoring active - checking for hazard mentions...');
     } catch (error) {
       console.error('Error in social media monitoring:', error.message);
@@ -124,6 +126,55 @@ const monitorReddit = async () => {
     }
   } catch (error) {
     console.error('Reddit monitoring error:', error.message);
+  }
+};
+
+/**
+ * Monitor News API for ocean hazard articles
+ */
+const monitorNews = async () => {
+  if (!process.env.NEWS_API_KEY) {
+    return;
+  }
+
+  try {
+    const hazardKeywords = ['tsunami', 'hurricane', 'cyclone', 'ocean hazard', 'marine emergency', 'coastal warning', 'storm surge', 'flood', 'sea level rise'];
+    const query = hazardKeywords.join(' OR ');
+    
+    // Search for news articles related to ocean hazards
+    const response = await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&sortBy=publishedAt&pageSize=20`, {
+      headers: {
+        'X-API-Key': process.env.NEWS_API_KEY,
+        'Content-Type': 'application/json'
+      }
+    });
+
+    if (response.ok) {
+      const data = await response.json();
+      if (data.articles && Array.isArray(data.articles)) {
+        for (const article of data.articles) {
+          const analysis = analyzeSocialMediaPost({
+            text: `${article.title} ${article.description || ''}`,
+            platform: 'news',
+            url: article.url,
+            timestamp: article.publishedAt,
+            source: article.source?.name,
+            author: article.author
+          });
+          
+          monitoringStats.platforms.news.posts++;
+          monitoringStats.totalPostsAnalyzed++;
+          
+          if (analysis.hasHazardMention) {
+            monitoringStats.platforms.news.mentions++;
+            monitoringStats.hazardMentionsFound++;
+            console.log(`📰 News hazard mention detected from ${article.source?.name}: ${analysis.keywords.join(', ')} - Severity: ${analysis.severity}`);
+          }
+        }
+      }
+    }
+  } catch (error) {
+    console.error('News API monitoring error:', error.message);
   }
 };
 
@@ -232,7 +283,8 @@ export const getSocialMediaStats = () => {
     lastUpdated: monitoringStats.lastUpdate.toISOString(),
     monitoringStatus: {
       twitter: process.env.TWITTERAPI_IO_KEY ? 'active' : 'disabled',
-      reddit: redditClient ? 'active' : 'disabled'
+      reddit: redditClient ? 'active' : 'disabled',
+      news: process.env.NEWS_API_KEY ? 'active' : 'disabled'
     }
   };
 };
