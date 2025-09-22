@@ -47,20 +47,20 @@ export const startSocialMediaMonitoring = async () => {
 };
 
 /**
- * Monitor Twitter for hazard mentions using TwitterAPI.io
+ * Monitor Twitter for hazard mentions using official Twitter API v2
  */
 const monitorTwitter = async () => {
-  if (!process.env.TWITTERAPI_IO_KEY) {
+  if (!process.env.TWITTER_BEARER_TOKEN) {
     return;
   }
 
   try {
-    const hazardKeywords = ['tsunami', 'hurricane', 'cyclone', 'ocean hazard', 'marine emergency', 'coastal warning'];
-    const query = hazardKeywords.join(' OR ');
+    const hazardKeywords = ['tsunami', 'hurricane', 'cyclone', 'ocean hazard', 'marine emergency', 'coastal warning', 'storm surge', 'flood'];
+    const query = `(${hazardKeywords.join(' OR ')}) lang:en -is:retweet`;
     
-    const response = await fetch(`https://api.twitterapi.io/tweets/search?query=${encodeURIComponent(query)}&limit=10`, {
+    const response = await fetch(`https://api.twitter.com/2/tweets/search/recent?query=${encodeURIComponent(query)}&max_results=20&tweet.fields=created_at,author_id,public_metrics,context_annotations&expansions=author_id`, {
       headers: {
-        'Authorization': `Bearer ${process.env.TWITTERAPI_IO_KEY}`,
+        'Authorization': `Bearer ${process.env.TWITTER_BEARER_TOKEN}`,
         'Content-Type': 'application/json'
       }
     });
@@ -73,7 +73,9 @@ const monitorTwitter = async () => {
             text: tweet.text,
             platform: 'twitter',
             url: `https://twitter.com/i/web/status/${tweet.id}`,
-            timestamp: tweet.created_at
+            timestamp: tweet.created_at,
+            metrics: tweet.public_metrics,
+            author_id: tweet.author_id
           });
           
           monitoringStats.platforms.twitter.posts++;
@@ -82,10 +84,13 @@ const monitorTwitter = async () => {
           if (analysis.hasHazardMention) {
             monitoringStats.platforms.twitter.mentions++;
             monitoringStats.hazardMentionsFound++;
-            console.log(`🚨 Twitter hazard mention detected: ${analysis.keywords.join(', ')} - Severity: ${analysis.severity}`);
+            console.log(`🚨 Twitter hazard mention detected: ${analysis.keywords.join(', ')} - Severity: ${analysis.severity} - Engagement: ${tweet.public_metrics?.retweet_count || 0} RTs`);
           }
         }
       }
+    } else {
+      const errorData = await response.text();
+      console.error('Twitter API error:', response.status, errorData);
     }
   } catch (error) {
     console.error('Twitter monitoring error:', error.message);
@@ -282,7 +287,7 @@ export const getSocialMediaStats = () => {
     engagementRate: totalPosts > 0 ? ((totalMentions / totalPosts) * 100).toFixed(1) : 0,
     lastUpdated: monitoringStats.lastUpdate.toISOString(),
     monitoringStatus: {
-      twitter: process.env.TWITTERAPI_IO_KEY ? 'active' : 'disabled',
+      twitter: process.env.TWITTER_BEARER_TOKEN ? 'active' : 'disabled',
       reddit: redditClient ? 'active' : 'disabled',
       news: process.env.NEWS_API_KEY ? 'active' : 'disabled'
     }
