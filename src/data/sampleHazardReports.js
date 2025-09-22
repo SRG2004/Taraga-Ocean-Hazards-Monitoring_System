@@ -91,7 +91,7 @@ export const sampleHazardReports = [
       district: 'Chennai',
       state: 'Tamil Nadu'
     },
-    description: 'Tidal surges combined with heavy rainfall have caused extreme coastal flooding, revealing the city''s vulnerability.',
+    description: 'Tidal surges combined with heavy rainfall have caused extreme coastal flooding, revealing the city\'s vulnerability.',
     reportedBy: {
       id: 'gov_chennai_corp',
       name: 'Greater Chennai Corporation',
