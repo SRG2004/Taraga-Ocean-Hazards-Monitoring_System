@@ -36,6 +36,63 @@ export const socialMediaService = {
     }
   },
 
+  async monitorTwitter() {
+    const twitterBearerToken = import.meta.env.VITE_TWITTER_BEARER_TOKEN;
+
+    if (!twitterBearerToken) {
+      console.warn('Twitter bearer token not found. Skipping Twitter monitoring.');
+      return [];
+    }
+
+    const query = '(
+      tsunami OR cyclone OR "ocean hazard" OR "marine emergency" OR "coastal warning" OR "storm surge" OR flood OR monsoon OR "high tide"
+    ) AND (
+      India OR "Indian Ocean" OR "Bay of Bengal" OR "Arabian Sea" OR Mumbai OR Chennai OR Kolkata OR Kerala OR "Tamil Nadu" OR Odisha OR Gujarat
+    ) -is:retweet';
+
+    try {
+      const response = await axios.get('https://api.twitter.com/2/tweets/search/recent', {
+        headers: {
+          Authorization: `Bearer ${twitterBearerToken}`,
+        },
+        params: {
+          query,
+          'tweet.fields': 'created_at,geo',
+          expansions: 'author_id',
+          'user.fields': 'name,username,profile_image_url,verified',
+          max_results: 20,
+        },
+      });
+
+      if (response.data && response.data.data) {
+        const users = response.data.includes.users.reduce((acc, user) => {
+          acc[user.id] = user;
+          return acc;
+        }, {});
+
+        return response.data.data.map(tweet => {
+          const user = users[tweet.author_id] || {};
+          return {
+            platform: 'Twitter',
+            author: user.name,
+            username: user.username,
+            content: tweet.text,
+            timestamp: tweet.created_at,
+            profileImageUrl: user.profile_image_url,
+            verified: user.verified,
+            engagement: {},
+            geo: tweet.geo,
+          };
+        });
+      }
+
+      return [];
+    } catch (error) {
+      console.error('Error fetching tweets:', error);
+      throw new Error('Failed to fetch tweets from Twitter API.');
+    }
+  },
+
   // Get trending topics (with fallback to simulated data)
   async getTrendingTopics(limit = 10) {
     try {
