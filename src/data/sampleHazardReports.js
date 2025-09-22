@@ -1,6 +1,128 @@
 // Sample hazard reports for testing map markers and hotspots
 export const sampleHazardReports = [
   {
+    id: 'hr_2025_punjab',
+    title: 'Catastrophic Flooding in Punjab',
+    type: 'flood',
+    severity: 'critical',
+    status: 'active',
+    location: {
+      latitude: 31.53,
+      longitude: 75.92,
+      address: 'Over 1,400 villages submerged, Punjab',
+      district: 'State-wide',
+      state: 'Punjab'
+    },
+    description: 'Unprecedented monsoon rains led to catastrophic floods, submerging over 1,400 villages. Mass evacuations are underway. Caused by dam overflow and unregulated development.',
+    reportedBy: {
+      id: 'gov_punjab_dma',
+      name: 'Punjab Disaster Management Authority',
+      type: 'official'
+    },
+    reportedAt: new Date(Date.now() - 1 * 60 * 60 * 1000).toISOString(), // 1 hour ago
+    verifiedAt: new Date(Date.now() - 30 * 60 * 1000).toISOString(), // 30 mins ago
+    verifiedBy: 'admin@oceanhazard.com',
+    affectedArea: '1,400 villages',
+    estimatedAffectedPopulation: 2500000,
+    emergencyContacts: ['1077', '112'],
+    images: [],
+    weatherConditions: {
+      windSpeed: '25 km/h',
+      waveHeight: 'N/A',
+      temperature: '24°C',
+      visibility: 'Poor'
+    },
+    tags: ['critical', 'flooding', 'evacuation_mandatory', 'monsoon_disaster']
+  },
+  {
+    id: 'hr_2025_hp',
+    title: 'Flash Floods & Landslides in Himachal Pradesh',
+    type: 'landslide',
+    severity: 'high',
+    status: 'active',
+    location: {
+      latitude: 31.83,
+      longitude: 77.00,
+      address: 'Multiple districts, Himachal Pradesh',
+      district: 'State-wide',
+      state: 'Himachal Pradesh'
+    },
+    description: 'Relentless monsoon downpours triggered severe flash floods and landslides, resulting in loss of life and destruction of key transportation networks.',
+    reportedBy: {
+      id: 'gov_hp_dma',
+      name: 'Himachal Pradesh DMA',
+      type: 'official'
+    },
+    reportedAt: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(), // 3 hours ago
+    tags: ['high', 'flash_flood', 'landslide', 'monsoon']
+  },
+    {
+    id: 'hr_2025_mumbai',
+    title: 'Severe Urban & Coastal Flooding in Mumbai',
+    type: 'flood',
+    severity: 'high',
+    status: 'active',
+    location: {
+      latitude: 19.07,
+      longitude: 72.87,
+      address: 'Coastal and low-lying areas, Mumbai',
+      district: 'Mumbai',
+      state: 'Maharashtra'
+    },
+    description: 'Extreme urban and coastal flooding due to tidal surges and poor drainage after intense rainfall. Major disruptions to transport and daily life.',
+    reportedBy: {
+      id: 'citizen_mumbai_01',
+      name: 'Mumbai Resident',
+      type: 'citizen'
+    },
+    reportedAt: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(), // 2 hours ago
+    tags: ['high', 'urban_flooding', 'tidal_surge', 'mumbai_rains']
+  },
+  {
+    id: 'hr_2025_chennai',
+    title: 'Extreme Coastal Flooding in Chennai',
+    type: 'flood',
+    severity: 'high',
+    status: 'active',
+    location: {
+      latitude: 13.08,
+      longitude: 80.27,
+      address: 'Low-lying coastal regions, Chennai',
+      district: 'Chennai',
+      state: 'Tamil Nadu'
+    },
+    description: 'Tidal surges combined with heavy rainfall have caused extreme coastal flooding, revealing the city's vulnerability.',
+    reportedBy: {
+      id: 'gov_chennai_corp',
+      name: 'Greater Chennai Corporation',
+      type: 'official'
+    },
+    reportedAt: new Date(Date.now() - 4 * 60 * 60 * 1000).toISOString(), // 4 hours ago
+    tags: ['high', 'coastal_flooding', 'chennai_rains']
+  },
+  {
+    id: 'hr_2025_bihar',
+    title: 'Ganga River Breaches Danger Mark in Bihar',
+    type: 'flood',
+    severity: 'high',
+    status: 'active',
+    location: {
+      latitude: 25.61,
+      longitude: 85.15,
+      address: 'Riverbanks along Ganga, Bihar',
+      district: 'State-wide',
+      state: 'Bihar'
+    },
+    description: 'The Ganga River has breached danger marks in multiple locations, causing severe crop damage and threatening embankments.',
+    reportedBy: {
+      id: 'gov_bihar_wrd',
+      name: 'Bihar Water Resource Dept.',
+      type: 'official'
+    },
+    reportedAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(), // 8 hours ago
+    tags: ['high', 'river_flood', 'ganga', 'agriculture_loss']
+  },
+  {
     id: 'hr_001',
     title: 'High Tide Alert - Marina Beach',
     type: 'tidal_surge',
@@ -169,109 +291,6 @@ export const sampleHazardReports = [
       visibility: 'Excellent'
     },
     tags: ['monitoring', 'erosion', 'research']
-  },
-  {
-    id: 'hr_006',
-    title: 'Tsunami Warning - Andaman Coast',
-    type: 'tsunami',
-    severity: 'critical',
-    status: 'resolved',
-    location: {
-      latitude: 11.7401,
-      longitude: 92.6586,
-      address: 'Port Blair, Andaman and Nicobar Islands',
-      district: 'South Andaman',
-      state: 'Andaman and Nicobar Islands'
-    },
-    description: 'Tsunami warning issued after 6.2 magnitude earthquake. All clear issued after 4 hours.',
-    reportedBy: {
-      id: 'user_006',
-      name: 'Seismic Monitoring Center',
-      type: 'official'
-    },
-    reportedAt: new Date(Date.now() - 48 * 60 * 60 * 1000).toISOString(), // 2 days ago
-    verifiedAt: new Date(Date.now() - 47 * 60 * 60 * 1000).toISOString(), // 47 hours ago
-    verifiedBy: 'admin@oceanhazard.com',
-    resolvedAt: new Date(Date.now() - 44 * 60 * 60 * 1000).toISOString(), // 44 hours ago
-    affectedArea: 'All coastal areas',
-    estimatedAffectedPopulation: 100000,
-    emergencyContacts: ['+91-3192-232102', '+91-3192-232103'],
-    images: ['tsunami_warning_001.jpg', 'evacuation_002.jpg'],
-    weatherConditions: {
-      windSpeed: '25 km/h',
-      waveHeight: '2.0m',
-      temperature: '28°C',
-      visibility: 'Good'
-    },
-    tags: ['resolved', 'tsunami', 'earthquake', 'evacuation_completed']
-  },
-  {
-    id: 'hr_007',
-    title: 'Red Tide Alert - Mumbai Coast',
-    type: 'red_tide',
-    severity: 'medium',
-    status: 'active',
-    location: {
-      latitude: 19.0760,
-      longitude: 72.8777,
-      address: 'Juhu Beach, Mumbai, Maharashtra',
-      district: 'Mumbai',
-      state: 'Maharashtra'
-    },
-    description: 'Red tide phenomenon observed. Fish mortality reported. Seafood consumption advisory issued.',
-    reportedBy: {
-      id: 'user_007',
-      name: 'Marine Biology Institute',
-      type: 'researcher'
-    },
-    reportedAt: new Date(Date.now() - 12 * 60 * 60 * 1000).toISOString(), // 12 hours ago
-    verifiedAt: new Date(Date.now() - 10 * 60 * 60 * 1000).toISOString(), // 10 hours ago
-    verifiedBy: 'analyst@oceanhazard.com',
-    affectedArea: '8 km coastline',
-    estimatedAffectedPopulation: 50000,
-    emergencyContacts: ['+91-22-26205656', '+91-22-26205657'],
-    images: ['red_tide_001.jpg', 'fish_mortality_002.jpg'],
-    weatherConditions: {
-      windSpeed: '18 km/h',
-      waveHeight: '1.8m',
-      temperature: '31°C',
-      visibility: 'Good'
-    },
-    tags: ['red_tide', 'seafood_advisory', 'marine_toxin']
-  },
-  {
-    id: 'hr_008',
-    title: 'Strong Current Warning - Rameshwaram',
-    type: 'strong_current',
-    severity: 'medium',
-    status: 'active',
-    location: {
-      latitude: 9.2876,
-      longitude: 79.3129,
-      address: 'Dhanushkodi Beach, Rameshwaram, Tamil Nadu',
-      district: 'Ramanathapuram',
-      state: 'Tamil Nadu'
-    },
-    description: 'Unusual strong underwater currents detected. Fishing and swimming activities suspended.',
-    reportedBy: {
-      id: 'user_008',
-      name: 'Coast Guard Station',
-      type: 'official'
-    },
-    reportedAt: new Date(Date.now() - 8 * 60 * 60 * 1000).toISOString(), // 8 hours ago
-    verifiedAt: new Date(Date.now() - 7 * 60 * 60 * 1000).toISOString(), // 7 hours ago
-    verifiedBy: 'officer@oceanhazard.com',
-    affectedArea: '5 km radius',
-    estimatedAffectedPopulation: 8000,
-    emergencyContacts: ['+91-4573-221108', '+91-4573-221109'],
-    images: ['strong_current_001.jpg', 'suspended_activities_002.jpg'],
-    weatherConditions: {
-      windSpeed: '30 km/h',
-      waveHeight: '2.5m',
-      temperature: '33°C',
-      visibility: 'Good'
-    },
-    tags: ['strong_current', 'fishing_suspended', 'safety_advisory']
   }
 ];
 

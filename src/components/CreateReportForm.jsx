@@ -166,7 +166,7 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
   return (
     <>
       <div className="modal-overlay" onClick={onClose}></div>
-      <div className="create-report-modal">
+      <div className="modal-container">
         <div className="modal-content">
           <div className="modal-header">
             <h2>Report Ocean Hazard</h2>
@@ -174,139 +174,138 @@ const CreateReportForm = ({ onClose, onSuccess, initialLocation = null }) => {
           </div>
 
           <form onSubmit={handleSubmit} className="report-form">
-            {/* Form sections go here, same as before */}
             <div className="form-section">
-            <h3>Basic Information</h3>
-            <div className="form-group">
-              <label htmlFor="title">Report Title</label>
-              <input
-                type="text"
-                id="title"
-                name="title"
-                value={formData.title}
-                onChange={handleInputChange}
-                placeholder="Brief title for the hazard"
-                maxLength={100}
-              />
-            </div>
-            <div className="form-group">
-              <label htmlFor="type">Hazard Type *</label>
-              <select
-                id="type"
-                name="type"
-                value={formData.type}
-                onChange={handleInputChange}
-                required
-              >
-                {hazardTypes.map(type => (
-                  <option key={type.value} value={type.value}>
-                    {type.label}
-                  </option>
-                ))}
-              </select>
-            </div>
-            <div className="form-group">
-              <label htmlFor="severity">Severity Level *</label>
-              <select
-                id="severity"
-                name="severity"
-                value={formData.severity}
-                onChange={handleInputChange}
-                required
-              >
-                {severityLevels.map(level => (
-                  <option key={level.value} value={level.value}>
-                    {level.label}
-                  </option>
-                ))}\
-              </select>
-            </div>
-            <div className="form-group">
-              <label htmlFor="description">Description *</label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleInputChange}
-                placeholder="Detailed description of what you observed..."
-                rows={4}
-                required
-                maxLength={1000}
-              />
-              <small>{formData.description.length}/1000 characters</small>
-            </div>
-          </div>
-
-          <div className="form-section">
-            <h3>Location</h3>
-            <div className="location-controls">
-              <button
-                type="button"
-                onClick={getCurrentLocation}
-                disabled={locationLoading}
-                className="location-button"
-              >
-                {locationLoading ? '📍 Getting Location...' : '📍 Use Current Location'}
-              </button>
-              {formData.coordinates && (
-                <div className="coordinates-display">
-                  <p>📍 Lat: {formData.coordinates.lat.toFixed(6)}, Lng: {formData.coordinates.lng.toFixed(6)}</p>
-                  {formData.locationAddress && (
-                    <p className="address">📍 {formData.locationAddress}</p>
-                  )}
-                </div>
-              )}
-            </div>
-            <div className="form-group">
-              <label htmlFor="locationAddress">Location Details</label>
-              <input
-                type="text"
-                id="locationAddress"
-                name="locationAddress"
-                value={formData.locationAddress}
-                onChange={handleInputChange}
-                placeholder="Describe the exact location (beach name, landmark, etc.)"
-              />
-            </div>
-          </div>
-
-          <div className="form-section">
-            <h3>Photos/Videos (Optional)</h3>
-            <div className="form-group">
-              <label htmlFor="mediaFiles">Upload Images/Videos</label>
-              <input
-                type="file"
-                id="mediaFiles"
-                multiple
-                accept="image/*,video/*"
-                onChange={handleImageChange}
-                className="file-input"
-              />
-              <small>Supported formats: JPG, PNG, MP4, MOV (Max 5 files, 10MB each)</small>
-              {formData.mediaFiles.length > 0 && (
-                <div className="file-preview">
-                  {Array.from(formData.mediaFiles).map((file, index) => (
-                    <div key={index} className="file-item">
-                      📷 {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
-                    </div>
+              <h3>Basic Information</h3>
+              <div className="form-group">
+                <label htmlFor="title">Report Title</label>
+                <input
+                  type="text"
+                  id="title"
+                  name="title"
+                  value={formData.title}
+                  onChange={handleInputChange}
+                  placeholder="Brief title for the hazard"
+                  maxLength={100}
+                />
+              </div>
+              <div className="form-group">
+                <label htmlFor="type">Hazard Type *</label>
+                <select
+                  id="type"
+                  name="type"
+                  value={formData.type}
+                  onChange={handleInputChange}
+                  required
+                >
+                  {hazardTypes.map(type => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
                   ))}
-                </div>
-              )}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="severity">Severity Level *</label>
+                <select
+                  id="severity"
+                  name="severity"
+                  value={formData.severity}
+                  onChange={handleInputChange}
+                  required
+                >
+                  {severityLevels.map(level => (
+                    <option key={level.value} value={level.value}>
+                      {level.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+              <div className="form-group">
+                <label htmlFor="description">Description *</label>
+                <textarea
+                  id="description"
+                  name="description"
+                  value={formData.description}
+                  onChange={handleInputChange}
+                  placeholder="Detailed description of what you observed..."
+                  rows={4}
+                  required
+                  maxLength={1000}
+                />
+                <small>{formData.description.length}/1000 characters</small>
+              </div>
             </div>
-          </div>
 
-          <div className="form-actions">
-            <button type="button" onClick={onClose} className="cancel-button">
-              Cancel
-            </button>
-            <button 
-              type="submit" 
-              disabled={loading || !formData.coordinates}
-              className="submit-button"
-            >
-              {loading ? 'Submitting...' : 'Submit Report'}
-            </button>
-          </div>
+            <div className="form-section">
+              <h3>Location</h3>
+              <div className="location-controls">
+                <button
+                  type="button"
+                  onClick={getCurrentLocation}
+                  disabled={locationLoading}
+                  className="location-button"
+                >
+                  {locationLoading ? '📍 Getting Location...' : '📍 Use Current Location'}
+                </button>
+                {formData.coordinates && (
+                  <div className="coordinates-display">
+                    <p>📍 Lat: {formData.coordinates.lat.toFixed(6)}, Lng: {formData.coordinates.lng.toFixed(6)}</p>
+                    {formData.locationAddress && (
+                      <p className="address">📍 {formData.locationAddress}</p>
+                    )}
+                  </div>
+                )}
+              </div>
+              <div className="form-group">
+                <label htmlFor="locationAddress">Location Details</label>
+                <input
+                  type="text"
+                  id="locationAddress"
+                  name="locationAddress"
+                  value={formData.locationAddress}
+                  onChange={handleInputChange}
+                  placeholder="Describe the exact location (beach name, landmark, etc.)"
+                />
+              </div>
+            </div>
+
+            <div className="form-section">
+              <h3>Photos/Videos (Optional)</h3>
+              <div className="form-group">
+                <label htmlFor="mediaFiles">Upload Images/Videos</label>
+                <input
+                  type="file"
+                  id="mediaFiles"
+                  multiple
+                  accept="image/*,video/*"
+                  onChange={handleImageChange}
+                  className="file-input"
+                />
+                <small>Supported formats: JPG, PNG, MP4, MOV (Max 5 files, 10MB each)</small>
+                {formData.mediaFiles.length > 0 && (
+                  <div className="file-preview">
+                    {Array.from(formData.mediaFiles).map((file, index) => (
+                      <div key={index} className="file-item">
+                        📷 {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+                      </div>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+
+            <div className="form-actions">
+              <button type="button" onClick={onClose} className="cancel-button">
+                Cancel
+              </button>
+              <button 
+                type="submit" 
+                disabled={loading || !formData.coordinates}
+                className="submit-button"
+              >
+                {loading ? 'Submitting...' : 'Submit Report'}
+              </button>
+            </div>
           </form>
         </div>
       </div>

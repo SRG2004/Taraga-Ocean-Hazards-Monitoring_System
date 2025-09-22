@@ -193,38 +193,46 @@ export const socialMediaService = {
   // Simulate social media data fetching
   async fetchSimulatedSocialMediaData() {
     const simulatedPosts = [
-      {
-        platform: '@TheHindu',
-        author: 'The Hindu',
-        content: 'Cyclone Alert: IMD Issues Warning for East Coast Indian Meteorological Department has issued a cyclone warning for the east coast. Fishermen advised not to venture into the sea.',
-        timestamp: new Date(Date.now() - 3600000).toISOString(),
-        engagement: { likes: 456, shares: 123, comments: 89 },
+       {
+        platform: '@NDRFHQ',
+        author: 'NDRF',
+        content: 'Massive flooding in Punjab. Over 1,400 villages inundated. Rescue operations are in full swing. Stay safe, follow evacuation orders. #PunjabFloods #Monsoon2025',
+        timestamp: new Date(Date.now() - 1.5 * 60 * 60 * 1000).toISOString(),
+        engagement: { likes: 1200, shares: 800, comments: 250 },
         verified: true
       },
       {
-        platform: '@IndiaMetDept',
-        author: 'India Meteorological Department',
-        content: 'IMD issues cyclone warning for Bay of Bengal. Fishermen advised to return to shore immediately. #CycloneAlert #BayOfBengal',
-        timestamp: new Date(Date.now() - 7200000).toISOString(),
-        engagement: { likes: 567, shares: 234, comments: 89 },
+        platform: '@PunjabGovtIndia',
+        author: 'Government of Punjab',
+        content: 'Catastrophic floods have hit Punjab. Emergency services are deployed. Control rooms are active. Call 1077 for assistance. #PunjabFloods #DisasterAlert',
+        timestamp: new Date(Date.now() - 2 * 60 * 60 * 1000).toISOString(),
+        engagement: { likes: 950, shares: 600, comments: 180 },
         verified: true
       },
       {
-        platform: '@ChennaiWeatherLive',
-        author: 'Chennai Weather Live',
-        content: 'High waves reported at Chennai Marina Beach. Coast Guard advisory issued for fishing vessels. Wave height: 3.5m #ChennaiWeather #MarineAlert',
-        timestamp: new Date(Date.now() - 600000).toISOString(),
-        engagement: { likes: 245, shares: 67, comments: 23 },
+        platform: '@TimesofIndia',
+        author: 'The Times of India',
+        content: 'Mumbai battles severe urban flooding after unprecedented rainfall and tidal surges. Public transport affected. #MumbaiRains #MumbaiFloods',
+        timestamp: new Date(Date.now() - 3 * 60 * 60 * 1000).toISOString(),
+        engagement: { likes: 780, shares: 450, comments: 120 },
         verified: true
       },
       {
-        platform: '@CoastalResident',
-        author: 'Coastal Resident',
-        content: 'Cyclone approaching Bay of Bengal - preparation tips needed Looking for advice on cyclone preparation for coastal areas. First time dealing with this.',
-        timestamp: new Date(Date.now() - 10800000).toISOString(),
-        engagement: { likes: 76, shares: 0, comments: 21 },
+        platform: '@HPTourism',
+        author: 'Himachal Tourism',
+        content: 'Tourists are advised to postpone travel to Himachal Pradesh due to flash floods and landslides. Many roads are blocked. #HimachalFloods #TravelAdvisory',
+        timestamp: new Date(Date.now() - 5 * 60 * 60 * 1000).toISOString(),
+        engagement: { likes: 550, shares: 300, comments: 90 },
+        verified: true
+      },
+       {
+        platform: '@CitizenJournalist',
+        author: 'Concerned Citizen',
+        content: 'My village in Punjab is completely underwater. We are awaiting rescue. Need help urgently! #PunjabFloods',
+        timestamp: new Date(Date.now() - 6 * 60 * 60 * 1000).toISOString(),
+        engagement: { likes: 250, shares: 150, comments: 50 },
         verified: false
-      }
+      },
     ];
 
     // Process each simulated post
