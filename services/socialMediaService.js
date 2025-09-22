@@ -55,8 +55,9 @@ const monitorTwitter = async () => {
   }
 
   try {
-    const hazardKeywords = ['tsunami', 'hurricane', 'cyclone', 'ocean hazard', 'marine emergency', 'coastal warning', 'storm surge', 'flood'];
-    const query = `(${hazardKeywords.join(' OR ')}) lang:en -is:retweet`;
+    const hazardKeywords = ['tsunami', 'cyclone', 'ocean hazard', 'marine emergency', 'coastal warning', 'storm surge', 'flood', 'monsoon'];
+    const indiaLocations = ['India', 'Mumbai', 'Chennai', 'Kolkata', 'Kochi', 'Goa', 'Kerala', 'Tamil Nadu', 'Andhra Pradesh', 'Odisha', 'West Bengal', 'Gujarat', 'Maharashtra', 'Bay of Bengal', 'Arabian Sea', 'Indian Ocean'];
+    const query = `(${hazardKeywords.join(' OR ')}) (${indiaLocations.join(' OR ')}) lang:en -is:retweet`;
     
     const response = await fetch(`https://api.twitter.com/2/tweets/search/recent?query=${encodeURIComponent(query)}&max_results=20&tweet.fields=created_at,author_id,public_metrics,context_annotations&expansions=author_id`, {
       headers: {
@@ -106,7 +107,7 @@ const monitorReddit = async () => {
   }
 
   try {
-    const subreddits = ['weather', 'tsunami', 'hurricane', 'climatechange', 'environment'];
+    const subreddits = ['india', 'IndiaSpeaks', 'mumbai', 'chennai', 'kolkata', 'kerala', 'TamilNadu', 'weather', 'tsunami', 'climatechange', 'environment'];
     
     for (const subreddit of subreddits) {
       const posts = await redditClient.getSubreddit(subreddit).getNew({ limit: 5 });
@@ -143,10 +144,11 @@ const monitorNews = async () => {
   }
 
   try {
-    const hazardKeywords = ['tsunami', 'hurricane', 'cyclone', 'ocean hazard', 'marine emergency', 'coastal warning', 'storm surge', 'flood', 'sea level rise'];
-    const query = hazardKeywords.join(' OR ');
+    const hazardKeywords = ['tsunami', 'cyclone', 'ocean hazard', 'marine emergency', 'coastal warning', 'storm surge', 'flood', 'monsoon', 'high tide'];
+    const indiaKeywords = ['India', 'Indian Ocean', 'Bay of Bengal', 'Arabian Sea', 'Mumbai', 'Chennai', 'Kolkata', 'Kerala', 'Tamil Nadu', 'Odisha', 'Gujarat'];
+    const query = `(${hazardKeywords.join(' OR ')}) AND (${indiaKeywords.join(' OR ')})`;
     
-    // Search for news articles related to ocean hazards
+    // Search for news articles related to ocean hazards in India
     const response = await fetch(`https://newsapi.org/v2/everything?q=${encodeURIComponent(query)}&language=en&sortBy=publishedAt&pageSize=20`, {
       headers: {
         'X-API-Key': process.env.NEWS_API_KEY,
@@ -225,21 +227,32 @@ const determineSeverity = (text) => {
 };
 
 /**
- * Extract location information from text
+ * Extract location information from text (India-focused)
  */
 const extractLocation = (text) => {
-  // Simple location extraction - in a real implementation,
-  // this would use geocoding services
+  // Enhanced location extraction for Indian coastal regions
   const locations = [];
 
-  // Common coastal locations (simplified)
+  // Indian coastal states and major cities
   const coastalAreas = [
-    'mumbai', 'chennai', 'kolkata', 'goa', 'kerala', 'tamil nadu',
-    'andhra pradesh', 'odisha', 'west bengal', 'gujarat', 'maharashtra'
+    'mumbai', 'chennai', 'kolkata', 'goa', 'kochi', 'trivandrum', 'visakhapatnam',
+    'kerala', 'tamil nadu', 'andhra pradesh', 'odisha', 'west bengal', 
+    'gujarat', 'maharashtra', 'karnataka', 'pondicherry', 'daman', 'diu',
+    'bay of bengal', 'arabian sea', 'indian ocean', 'palk strait', 'gulf of mannar'
   ];
 
-  coastalAreas.forEach(location => {
-    if (text.includes(location)) {
+  // Important coastal districts and ports
+  const coastalDistricts = [
+    'thiruvananthapuram', 'ernakulam', 'kozhikode', 'kannur', 'alappuzha',
+    'thrissur', 'kollam', 'kasaragod', 'mangalore', 'udupi', 'karwar',
+    'ratnagiri', 'sindhudurg', 'thane', 'raigad', 'palghar', 'surat',
+    'bhavnagar', 'junagadh', 'porbandar', 'jamnagar', 'kutch', 'ahmedabad'
+  ];
+
+  const allLocations = [...coastalAreas, ...coastalDistricts];
+  
+  allLocations.forEach(location => {
+    if (text.toLowerCase().includes(location.toLowerCase())) {
       locations.push(location);
     }
   });
