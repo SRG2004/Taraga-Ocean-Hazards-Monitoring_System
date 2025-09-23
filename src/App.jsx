@@ -1,11 +1,12 @@
-import React, { useState } from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React, { useState, useContext } from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { AppProvider } from './contexts/AppContext';
-import Navigation from './components/Navigation';
+import { AppContext, AppProvider } from './contexts/AppContext';
+import Navbar from './components/Navbar';
 import HomePage from './pages/HomePage';
 import CitizenDashboard from './pages/CitizenDashboard';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
+import OfficerDashboard from './pages/OfficerDashboard';
 import SocialMediaMonitoring from './pages/SocialMediaMonitoring';
 import DonationManagement from './pages/DonationManagement';
 import VolunteerRegistration from './pages/VolunteerRegistration';
@@ -15,89 +16,45 @@ import MapViewPage from './pages/MapViewPage';
 import Settings from './pages/Settings';
 import './App.css';
 
-export default function App() {
-  // Environment check for debugging deployment issues
-  const isProduction = import.meta.env.PROD;
-  
-  if (isProduction) {
-    console.log('🌊 Tarang Ocean Hazard Monitor - Production Mode');
-    console.log('Environment:', import.meta.env.MODE);
-  }
-  
-  const [selectedLocation, setSelectedLocation] = useState(null);
+const AppRoutes = () => {
+  const { user } = useContext(AppContext);
 
-  try {
-    return (
-      <AppProvider>
-        <Router>
-          <div className="App">
-            <Toaster 
-              position="top-right"
-              toastOptions={{
-                duration: 4000,
-                style: {
-                  background: '#363636',
-                  color: '#fff',
-                },
-                success: {
-                  duration: 3000,
-                  iconTheme: {
-                    primary: '#10b981',
-                    secondary: '#fff',
-                  },
-                },
-                error: {
-                  duration: 5000,
-                  iconTheme: {
-                    primary: '#ef4444',
-                    secondary: '#fff',
-                  },
-                },
-              }}
-            />
-            <Navigation />
-            <Routes>
-              <Route path="/" element={<HomePage />} />
-              <Route path="/login" element={<LoginPage />} />
-              <Route path="/register" element={<UserRegistration />} />
-              <Route path="/citizen" element={<CitizenDashboard />} />
-              <Route path="/analyst" element={<AnalyticsDashboard />} />
-              <Route path="/official" element={<DonationManagement />} />
-              <Route path="/social-media" element={<SocialMediaMonitoring />} />
-              <Route path="/donations" element={<DonationManagement />} />
-              <Route path="/volunteer-registration" element={<VolunteerRegistration />} />
-              <Route path="/map" element={<div style={{ position: 'relative' }}><MapViewPage selectedLocation={selectedLocation} setSelectedLocation={setSelectedLocation} /></div>} />
-              <Route path="/settings" element={<Settings />} />
-            </Routes>
-          </div>
-        </Router>
-      </AppProvider>
-    );
-  } catch (error) {
-    console.error('App Error:', error);
-    // Fallback UI for production errors
-    return (
-      <div style={{
-        padding: '40px 20px',
-        minHeight: '100vh',
-        background: '#f8fafc',
-        fontFamily: 'system-ui, sans-serif'
-      }}>
-        <div style={{
-          maxWidth: '600px',
-          margin: '0 auto',
-          background: 'white',
-          padding: '40px',
-          borderRadius: '12px',
-          boxShadow: '0 4px 15px rgba(0,0,0,0.1)'
-        }}>
-          <h1 style={{color: '#1f2937', marginBottom: '20px'}}>🌊 Tarang Ocean Hazard Monitor</h1>
-          <div style={{padding: '20px', background: '#fef2f2', borderRadius: '8px', marginBottom: '20px'}}>
-            <p style={{color: '#dc2626', margin: 0}}>Application is loading... Please refresh the page.</p>
-          </div>
-          <p style={{color: '#6b7280'}}>If this issue persists, please contact support.</p>
+  return (
+    <Routes>
+      <Route path="/" element={<HomePage />} />
+      <Route path="/login" element={user ? <Navigate to={`/${user.role}`} /> : <LoginPage />} />
+      <Route path="/register" element={<UserRegistration />} />
+      <Route path="/citizen" element={user?.role === 'citizen' ? <CitizenDashboard /> : <Navigate to="/login" />} />
+      <Route path="/analyst" element={user?.role === 'analyst' ? <AnalyticsDashboard /> : <Navigate to="/login" />} />
+      <Route path="/official" element={user?.role === 'official' ? <OfficerDashboard /> : <Navigate to="/login" />} />
+      <Route path="/social-media" element={<SocialMediaMonitoring />} />
+      <Route path="/donations" element={<DonationManagement />} />
+      <Route path="/volunteer-registration" element={<VolunteerRegistration />} />
+      <Route path="/map" element={<MapViewPage />} />
+      <Route path="/settings" element={<Settings />} />
+    </Routes>
+  );
+};
+
+export default function App() {
+  return (
+    <AppProvider>
+      <Router>
+        <div className="App">
+          <Toaster
+            position="top-right"
+            toastOptions={{
+              duration: 4000,
+              style: {
+                background: '#333',
+                color: '#fff',
+              },
+            }}
+          />
+          <Navbar />
+          <AppRoutes />
         </div>
-      </div>
-    );
-  }
+      </Router>
+    </AppProvider>
+  );
 }

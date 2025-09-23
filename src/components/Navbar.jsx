@@ -1,6 +1,5 @@
-
 import React, { useContext } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { NavLink, useNavigate } from 'react-router-dom';
 import { AppContext } from '../contexts/AppContext';
 import './Navbar.css';
 
@@ -10,68 +9,64 @@ const Navbar = () => {
 
   const handleLogout = () => {
     setUser(null);
-    navigate('/login');
+    navigate('/');
   };
 
   return (
     <nav className="navbar">
       <div className="navbar-container">
-        <Link to="/" className="navbar-logo">
-          Tarang
-        </Link>
+        <NavLink to="/" className="navbar-logo">
+          🌊 Tarang
+        </NavLink>
         <ul className="nav-menu">
+          <li className="nav-item">
+            <NavLink to="/" className="nav-links" end>
+              Home
+            </NavLink>
+          </li>
           {user ? (
             <>
               {user.role === 'citizen' && (
-                <>
-                  <li className="nav-item">
-                    <Link to="/citizen-dashboard" className="nav-links">
-                      Dashboard
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link to="/report" className="nav-links">
-                      Report Hazard
-                    </Link>
-                  </li>
-                </>
+                <li className="nav-item">
+                  <NavLink to="/citizen" className="nav-links">
+                    Dashboard
+                  </NavLink>
+                </li>
               )}
-              {user.role === 'officer' && (
-                <>
-                  <li className="nav-item">
-                    <Link to="/officer-dashboard" className="nav-links">
-                      Dashboard
-                    </Link>
-                  </li>
-                  <li className="nav-item">
-                    <Link to="/analytics" className="nav-links">
-                      Analytics
-                    </Link>
-                  </li>
-                   <li className="nav-item">
-                    <Link to="/donations" className="nav-links">
-                      Donations
-                    </Link>
-                  </li>
-                </>
+              {user.role === 'official' && (
+                <li className="nav-item">
+                  <NavLink to="/official" className="nav-links">
+                    Dashboard
+                  </NavLink>
+                </li>
+              )}
+              {user.role === 'analyst' && (
+                <li className="nav-item">
+                  <NavLink to="/analyst" className="nav-links">
+                    Dashboard
+                  </NavLink>
+                </li>
               )}
               <li className="nav-item">
-                <button className="nav-links-button" onClick={handleLogout}>
-                  Logout
-                </button>
+                <button className="nav-links-button" onClick={handleLogout}>Logout</button>
               </li>
             </>
           ) : (
             <>
               <li className="nav-item">
-                <Link to="/login" className="nav-links">
-                  Login
-                </Link>
+                <NavLink to="/donations" className="nav-links">
+                  Donate
+                </NavLink>
               </li>
               <li className="nav-item">
-                <Link to="/register" className="nav-links">
+                <NavLink to="/login" className="nav-links">
+                  Login
+                </NavLink>
+              </li>
+              <li className="nav-item">
+                <NavLink to="/register" className="nav-links-button">
                   Register
-                </Link>
+                </NavLink>
               </li>
             </>
           )}
