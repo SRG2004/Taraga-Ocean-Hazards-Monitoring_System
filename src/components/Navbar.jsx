@@ -1,14 +1,14 @@
-import React, { useContext } from 'react';
+import React from 'react';
 import { NavLink, useNavigate } from 'react-router-dom';
-import { AppContext } from '../contexts/AppContext';
+import { useApp } from '../contexts/AppContext';
 import './Navbar.css';
 
 const Navbar = () => {
-  const { user, setUser } = useContext(AppContext);
+  const { user, logout } = useApp();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    setUser(null);
+  const handleLogout = async () => {
+    await logout();
     navigate('/');
   };
 
@@ -26,27 +26,11 @@ const Navbar = () => {
           </li>
           {user ? (
             <>
-              {user.role === 'citizen' && (
-                <li className="nav-item">
-                  <NavLink to="/citizen" className="nav-links">
-                    Dashboard
-                  </NavLink>
-                </li>
-              )}
-              {user.role === 'official' && (
-                <li className="nav-item">
-                  <NavLink to="/official" className="nav-links">
-                    Dashboard
-                  </NavLink>
-                </li>
-              )}
-              {user.role === 'analyst' && (
-                <li className="nav-item">
-                  <NavLink to="/analyst" className="nav-links">
-                    Dashboard
-                  </NavLink>
-                </li>
-              )}
+              <li className="nav-item">
+                <NavLink to={`/${user.role}/dashboard`} className="nav-links">
+                  Dashboard
+                </NavLink>
+              </li>
               <li className="nav-item">
                 <button className="nav-links-button" onClick={handleLogout}>Logout</button>
               </li>

@@ -1,7 +1,7 @@
-x import React, { useContext } from 'react';
+import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import { AppContext, AppProvider } from './contexts/AppContext';
+import { AppProvider, useApp } from './contexts/AppContext';
 import Navbar from './components/Navbar';
 import SideNav from './components/SideNav'; // Import SideNav
 import HomePage from './pages/HomePage';
@@ -19,7 +19,7 @@ import Settings from './pages/Settings';
 import './App.css';
 
 const AppRoutes = () => {
-  const { user } = useContext(AppContext);
+  const { user } = useApp();
 
   return (
     <div className="app-container">
