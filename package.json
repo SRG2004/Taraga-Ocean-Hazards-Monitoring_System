@@ -15,9 +15,12 @@
   "dependencies": {
     "@capacitor/android": "^6.0.0",
     "@capacitor/core": "^6.0.0",
+    "@radix-ui/react-slot": "^1.2.3",
     "@tanstack/react-query": "^5.45.1",
     "axios": "^1.7.2",
     "bcryptjs": "^2.4.3",
+    "class-variance-authority": "^0.7.1",
+    "clsx": "^2.1.1",
     "compression": "^1.7.4",
     "compromise": "^14.13.0",
     "cors": "^2.8.5",
@@ -31,6 +34,7 @@
     "helmet": "^7.1.0",
     "jsonwebtoken": "^9.0.2",
     "leaflet": "^1.9.4",
+    "lucide-react": "^0.544.0",
     "mapbox-gl": "^3.4.0",
     "mongoose": "^8.4.1",
     "morgan": "^1.10.0",
@@ -44,16 +48,21 @@
     "react-router-dom": "^6.23.1",
     "sentiment": "^5.0.2",
     "snoowrap": "^1.23.0",
-    "socket.io": "^4.7.5"
+    "socket.io": "^4.7.5",
+    "tailwind-merge": "^3.3.1",
+    "tailwindcss-animate": "^1.0.7"
   },
   "devDependencies": {
     "@capacitor/cli": "^6.0.0",
-    "@types/react": "^18.3.3",
-    "@types/react-dom": "^18.3.0",
+    "@types/react": "^18.3.24",
+    "@types/react-dom": "^18.3.7",
     "@vitejs/plugin-react": "^4.3.1",
+    "autoprefixer": "^10.4.21",
+    "postcss": "^8.5.6",
     "react": "^18.3.1",
     "react-dom": "^18.3.1",
-    "typescript": "^5.4.5",
+    "tailwindcss": "^4.1.13",
+    "typescript": "^5.9.2",
     "vite": "^5.2.13"
   }
 }
