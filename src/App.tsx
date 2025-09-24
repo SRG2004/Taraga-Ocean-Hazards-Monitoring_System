@@ -1,51 +1,58 @@
-import { useState } from 'react';
-import CitizenApp from './components/CitizenApp';
-import OfficialApp from './components/OfficialApp';
-import AnalystApp from './components/AnalystApp';
+import React, { useState } from 'react';
+import { CitizenApp } from './components/CitizenApp';
+import { OfficialApp } from './components/OfficialApp';
+import { AnalystApp } from './components/AnalystApp';
 import { Button } from './components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
-import { Waves } from 'lucide-react';
+import { Waves, Users, Shield, BarChart3 } from 'lucide-react';
 
-type Role = 'citizen' | 'official' | 'analyst';
+type Role = 'citizen' | 'official' | 'analyst' | null;
 
-function App() {
-  const [role, setRole] = useState<Role | null>(null);
+const App: React.FC = () => {
+  const [role, setRole] = useState<Role>(null);
+
+  const handleRoleChange = () => setRole(null);
 
   if (!role) {
-    return <RoleSelectionScreen onSelectRole={setRole} />;
+    return (
+      <div className="flex items-center justify-center min-h-screen bg-muted">
+        <Card className="w-full max-w-md mx-4">
+          <CardHeader className="text-center">
+            <div className="flex justify-center items-center mb-4">
+                <Waves className="h-10 w-10 text-primary" />
+            </div>
+            <CardTitle className="text-2xl">Tarang</CardTitle>
+            <CardDescription>Ocean Hazard Reporting Platform</CardDescription>
+          </CardHeader>
+          <CardContent className="grid gap-4">
+            <Button onClick={() => setRole('citizen')} className="w-full bg-slate-600 hover:bg-slate-600/90">
+              <Users className="mr-2 h-5 w-5" />
+              Community Member
+            </Button>
+            <Button onClick={() => setRole('official')} className="w-full bg-slate-700 hover:bg-slate-700/90">
+              <Shield className="mr-2 h-5 w-5" />
+              Safety Official
+            </Button>
+            <Button onClick={() => setRole('analyst')} className="w-full bg-slate-800 hover:bg-slate-800/90">
+              <BarChart3 className="mr-2 h-5 w-5" />
+              Data Analyst
+            </Button>
+          </CardContent>
+        </Card>
+      </div>
+    );
   }
 
   switch (role) {
     case 'citizen':
-      return <CitizenApp />;
+      return <CitizenApp onRoleChange={handleRoleChange} />;
     case 'official':
-      return <OfficialApp />;
+      return <OfficialApp onRoleChange={handleRoleChange} />;
     case 'analyst':
-      return <AnalystApp />;
+      return <AnalystApp onRoleChange={handleRoleChange} />;
     default:
       return null;
   }
-}
-
-const RoleSelectionScreen = ({ onSelectRole }: { onSelectRole: (role: Role) => void }) => {
-  return (
-    <div className="flex items-center justify-center h-screen bg-gray-100">
-      <Card className="w-[400px]">
-        <CardHeader className="text-center">
-          <div className="flex justify-center items-center mb-4">
-            <Waves className="w-12 h-12 text-slate-600" />
-          </div>
-          <CardTitle className="text-2xl font-bold">Welcome to Tarang</CardTitle>
-          <CardDescription>Ocean Hazard Reporting Platform</CardDescription>
-        </CardHeader>
-        <CardContent className="flex flex-col gap-4">
-          <Button onClick={() => onSelectRole('citizen')} className="w-full">Community Member</Button>
-          <Button onClick={() => onSelectRole('official')} className="w-full">Safety Official</Button>
-          <Button onClick={() => onSelectRole('analyst')} className="w-full">Data Analyst</Button>
-        </CardContent>
-      </Card>
-    </div>
-  );
 };
 
 export default App;

@@ -4,7 +4,8 @@ import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-le
 import { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import './InteractiveMap.css';
-import { sampleHazardReports, generateHotspots } from '../data/sampleHazardReports';
+import { db } from '../config/firebase';
+import { collection, getDocs } from 'firebase/firestore';
 
 // Fix for default markers in react-leaflet
 delete Icon.Default.prototype._getIconUrl;
@@ -67,6 +68,7 @@ const InteractiveMap = ({
   height = 'calc(100vh - 200px)',
   selectedLocation = null
 }) => {
+  const [hazardReports, setHazardReports] = useState([]);
   const [mapCenter, setMapCenter] = useState(center);
   const [mapZoom, setMapZoom] = useState(zoom);
   const [selectedLayers, setSelectedLayers] = useState({
@@ -74,9 +76,20 @@ const InteractiveMap = ({
     heatmap: showHeatmap
   });
 
+  useEffect(() => {
+    const fetchHazardReports = async () => {
+      const reportsCollection = collection(db, 'hazardReports');
+      const reportsSnapshot = await getDocs(reportsCollection);
+      const reportsList = reportsSnapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+      setHazardReports(reportsList);
+    };
+
+    fetchHazardReports();
+  }, []);
+
   // Generate hotspots from all reports, then filter verified ones.
-  const allHotspots = generateHotspots(sampleHazardReports);
-  const verifiedReports = sampleHazardReports.filter(report => report.verifiedAt);
+  const allHotspots = generateHotspots(hazardReports);
+  const verifiedReports = hazardReports.filter(report => report.verifiedAt);
   const verifiedHotspotIds = new Set(allHotspots.flatMap(h => h.reports));
   const verifiedHotspots = allHotspots.filter(h => h.reports.some(reportId => verifiedHotspotIds.has(reportId)));
 
