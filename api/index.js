@@ -16,7 +16,7 @@ dotenv.config();
 
 // --- CORRECTED ROUTE IMPORT ---
 // All API logic is now driven from the correct auth file.
-import authRoutes from '../../src/api/auth.js';
+import authRoutes from '../src/api/auth.js';
 
 // --- TODO: CONSOLIDATE OTHER ROUTES ---
 // These routes are from the old structure and need to be migrated
