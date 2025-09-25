@@ -7,11 +7,33 @@ dotenv.config();
 const router = express.Router();
 
 // Initialize Firebase Admin SDK
-const serviceAccount = JSON.parse(process.env.FIREBASE_SERVICE_ACCOUNT_KEY);
+try {
+  const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount)
-});
+  if (!serviceAccountKey) {
+    throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set.');
+  }
+
+  // The service account key from the environment variable may contain backslashes
+  // that are not properly escaped for JSON.parse. This includes newlines (as \n)
+  // and other literal backslashes in the key itself. The most robust solution
+  // is to replace all backslashes with double backslashes, which makes them
+  // valid escape characters in a JSON string.
+  const escapedServiceAccountKey = serviceAccountKey.replace(/\/g, '\\');
+  const serviceAccount = JSON.parse(escapedServiceAccountKey);
+
+  admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
+  });
+
+  console.log('Firebase Admin SDK initialized successfully.');
+
+} catch (error) {
+  console.error('CRITICAL: Failed to initialize Firebase Admin SDK. The server cannot start.');
+  console.error('Error details:', error.message);
+  console.error('This is often caused by an improperly formatted FIREBASE_SERVICE_ACCOUNT_KEY in the .env file.');
+  process.exit(1);
+}
 
 // User registration
 router.post('/register', async (req, res) => {
@@ -37,9 +59,6 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    // This is a simplified login. In a real app, you'd verify the password.
-    // Firebase Admin SDK doesn't directly verify passwords.
-    // A common approach is to use Firebase client-side SDK for login and send the ID token to the backend.
     const userRecord = await admin.auth().getUserByEmail(email);
     const token = await admin.auth().createCustomToken(userRecord.uid);
 
