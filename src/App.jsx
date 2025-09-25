@@ -4,7 +4,6 @@ import { Toaster } from 'react-hot-toast';
 import { AppProvider, useApp } from './contexts/AppContext';
 import Navbar from './components/Navbar';
 import SideNav from './components/SideNav'; // Import SideNav
-import HomePage from './pages/HomePage';
 import CitizenDashboard from './pages/CitizenDashboard';
 import AnalyticsDashboard from './pages/AnalyticsDashboard';
 import OfficerDashboard from './pages/OfficerDashboard';
@@ -26,10 +25,10 @@ const AppRoutes = () => {
       {user && <SideNav role={user.role} />}
       <main className="main-content">
         <Routes>
-          <Route path="/" element={<HomePage />} />
+          <Route path="/" element={<Navigate to="/citizen/dashboard" />} />
           <Route path="/login" element={user ? <Navigate to={`/${user.role}/dashboard`} /> : <LoginPage />} />
           <Route path="/register" element={<UserRegistration />} />
-          <Route path="/citizen/dashboard" element={user?.role === 'citizen' ? <CitizenDashboard /> : <Navigate to="/login" />} />
+          <Route path="/citizen/dashboard" element={<CitizenDashboard />} />
           <Route path="/analyst/dashboard" element={user?.role === 'analyst' ? <AnalyticsDashboard /> : <Navigate to="/login" />} />
           <Route path="/official/dashboard" element={user?.role === 'official' ? <OfficerDashboard /> : <Navigate to="/login" />} />
           <Route path="/social-media" element={<SocialMediaMonitoring />} />

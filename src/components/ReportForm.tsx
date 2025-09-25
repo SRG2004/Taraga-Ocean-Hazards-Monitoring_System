@@ -6,8 +6,11 @@ import { Button } from './ui/button';
 import { Label } from './ui/label';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from './ui/select';
 import { AlertCircle, CheckCircle, Upload } from 'lucide-react';
+import { useAuth } from '../contexts/AuthContext';
+import { hazardReportService } from '../services/hazardReportService.js';
 
 export const ReportForm: React.FC = () => {
+    const { user } = useAuth();
     const [formData, setFormData] = useState({
         type: '',
         severity: '',
@@ -39,37 +42,15 @@ export const ReportForm: React.FC = () => {
         setError(null);
         setSuccess(null);
 
-        const data = new FormData();
-        data.append('type', formData.type);
-        data.append('severity', formData.severity);
-        data.append('title', formData.title);
-        data.append('description', formData.description);
-        data.append('location', formData.location);
-
-        // Mock coordinates for now
-        data.append('coordinates', JSON.stringify({ lat: 13.0827, lng: 80.2707 })); 
-
-        if (files) {
-            for (let i = 0; i < files.length; i++) {
-                data.append('media', files[i]);
-            }
-        }
-
         try {
-            const response = await fetch('/api/hazards/report', {
-                method: 'POST',
-                body: data,
+            await hazardReportService.submitReport({
+                ...formData,
+                userId: user.id,
+                reporterName: user.fullName,
+                reporterEmail: user.email,
+                mediaFiles: files,
             });
-
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.error || 'Failed to submit report');
-            }
-
-            const result = await response.json();
             setSuccess('Hazard report submitted successfully!');
-            console.log(result);
-            // Reset form
             setFormData({
                 type: '',
                 severity: '',

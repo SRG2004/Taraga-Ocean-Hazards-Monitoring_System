@@ -3,8 +3,27 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 import './Navbar.css';
 
-const Navbar = () => {
-  const { user, logout } = useApp();
+interface User {
+  id: string;
+  email: string;
+  fullName: string;
+  role: 'admin' | 'analyst' | 'official' | 'citizen';
+  phone: string;
+  location: {
+    state: string;
+    district: string;
+    coastalArea: string;
+  };
+  permissions: string[];
+}
+
+interface AppContextType {
+  user: User | null;
+  logout: () => Promise<void>;
+}
+
+const Navbar: React.FC = () => {
+  const { user, logout } = useApp() as AppContextType;
   const navigate = useNavigate();
 
   const handleLogout = async () => {

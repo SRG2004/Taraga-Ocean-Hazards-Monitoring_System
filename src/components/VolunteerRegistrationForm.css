@@ -1,4 +1,4 @@
-.create-report-form-container {
+.volunteer-registration-form-container {
   background-color: #f9f9f9;
   padding: 2rem;
   border-radius: 8px;
@@ -11,7 +11,7 @@
   margin-bottom: 1.5rem;
 }
 
-.report-form {
+.registration-form {
   display: flex;
   flex-direction: column;
 }
@@ -27,17 +27,11 @@
 }
 
 .form-group input,
-.form-group select,
-.form-group textarea {
+.form-group select {
   width: 100%;
   padding: 0.75rem;
   border: 1px solid #ccc;
   border-radius: 4px;
-}
-
-.form-row {
-  display: flex;
-  gap: 1rem;
 }
 
 .submit-button {

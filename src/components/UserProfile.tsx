@@ -146,7 +146,7 @@ export const UserProfile: React.FC = () => {
                 </div>
                 <Button type="submit" disabled={submitting} className="w-full">
                     {submitting ? 'Updating...' : 'Update Profile'}
-                </Tutton>
+                </Button>
             </CardContent>
         </Card>
     );

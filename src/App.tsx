@@ -1,58 +1,65 @@
-import React, { useState } from 'react';
-import { CitizenApp } from './components/CitizenApp';
-import { OfficialApp } from './components/OfficialApp';
-import { AnalystApp } from './components/AnalystApp';
-import { Button } from './components/ui/button';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from './components/ui/card';
-import { Waves, Users, Shield, BarChart3 } from 'lucide-react';
+import React from 'react';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
+import { AppProvider, useApp } from './contexts/AppContext';
+import Navbar from './components/Navbar';
+import SideNav from './components/SideNav'; // Import SideNav
+import CitizenDashboard from './components/CitizenDashboard';
+import AnalyticsDashboard from './pages/AnalyticsDashboard';
+import OfficerDashboard from './pages/OfficerDashboard';
+import SocialMediaMonitoring from './pages/SocialMediaMonitoring';
+import DonationManagement from './pages/DonationManagement';
+import Donation from './pages/Donation'; // Import Donation
+import VolunteerRegistration from './pages/VolunteerRegistration';
+import UserRegistration from './pages/UserRegistration';
+import LoginPage from './pages/LoginPage';
+import MapViewPage from './pages/MapViewPage';
+import Settings from './pages/Settings';
+import './App.css';
 
-type Role = 'citizen' | 'official' | 'analyst' | null;
+const AppRoutes: React.FC = () => {
+  const { user } = useApp();
 
-const App: React.FC = () => {
-  const [role, setRole] = useState<Role>(null);
-
-  const handleRoleChange = () => setRole(null);
-
-  if (!role) {
-    return (
-      <div className="flex items-center justify-center min-h-screen bg-muted">
-        <Card className="w-full max-w-md mx-4">
-          <CardHeader className="text-center">
-            <div className="flex justify-center items-center mb-4">
-                <Waves className="h-10 w-10 text-primary" />
-            </div>
-            <CardTitle className="text-2xl">Tarang</CardTitle>
-            <CardDescription>Ocean Hazard Reporting Platform</CardDescription>
-          </CardHeader>
-          <CardContent className="grid gap-4">
-            <Button onClick={() => setRole('citizen')} className="w-full bg-slate-600 hover:bg-slate-600/90">
-              <Users className="mr-2 h-5 w-5" />
-              Community Member
-            </Button>
-            <Button onClick={() => setRole('official')} className="w-full bg-slate-700 hover:bg-slate-700/90">
-              <Shield className="mr-2 h-5 w-5" />
-              Safety Official
-            </Button>
-            <Button onClick={() => setRole('analyst')} className="w-full bg-slate-800 hover:bg-slate-800/90">
-              <BarChart3 className="mr-2 h-5 w-5" />
-              Data Analyst
-            </Button>
-          </CardContent>
-        </Card>
-      </div>
-    );
-  }
-
-  switch (role) {
-    case 'citizen':
-      return <CitizenApp onRoleChange={handleRoleChange} />;
-    case 'official':
-      return <OfficialApp onRoleChange={handleRoleChange} />;
-    case 'analyst':
-      return <AnalystApp onRoleChange={handleRoleChange} />;
-    default:
-      return null;
-  }
+  return (
+    <div className="app-container">
+      {user && <SideNav role={user.role} />}
+      <main className="main-content">
+        <Routes>
+          <Route path="/" element={<Navigate to="/citizen/dashboard" />} />
+          <Route path="/login" element={user ? <Navigate to={`/${user.role}/dashboard`} /> : <LoginPage />} />
+          <Route path="/register" element={<UserRegistration />} />
+          <Route path="/citizen/dashboard" element={<CitizenDashboard />} />
+          <Route path="/analyst/dashboard" element={user?.role === 'analyst' ? <AnalyticsDashboard /> : <Navigate to="/login" />} />
+          <Route path="/official/dashboard" element={user?.role === 'official' ? <OfficerDashboard /> : <Navigate to="/login" />} />
+          <Route path="/social-media" element={<SocialMediaMonitoring />} />
+          <Route path="/donations" element={<Donation />} />
+          <Route path="/donation-management" element={<DonationManagement />} />
+          <Route path="/volunteer-registration" element={<VolunteerRegistration />} />
+          <Route path="/map" element={<MapViewPage />} />
+          <Route path="/settings" element={<Settings />} />
+        </Routes>
+      </main>
+    </div>
+  );
 };
 
-export default App;
+export default function App() {
+  return (
+    <AppProvider>
+      <Router>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: '#333',
+              color: '#fff',
+            },
+          }}
+        />
+        <Navbar />
+        <AppRoutes />
+      </Router>
+    </AppProvider>
+  );
+}

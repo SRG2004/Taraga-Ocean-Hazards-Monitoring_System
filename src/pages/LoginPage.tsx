@@ -4,7 +4,15 @@ import { useApp } from '../contexts/AppContext';
 import toast from 'react-hot-toast';
 import './LoginPage.css';
 
-const LoginPage = () => {
+interface DemoAccount {
+  type: string;
+  email: string;
+  description: string;
+  icon: string;
+  password: string;
+}
+
+const LoginPage: React.FC = () => {
   const navigate = useNavigate();
   const { login, loading } = useApp();
   const [formData, setFormData] = useState({
@@ -14,7 +22,7 @@ const LoginPage = () => {
   });
   const [loginLoading, setLoginLoading] = useState(false);
 
-  const demoAccounts = [
+  const demoAccounts: DemoAccount[] = [
     {
       type: 'Admin',
       email: 'admin@oceanhazard.com',
@@ -45,7 +53,7 @@ const LoginPage = () => {
     }
   ];
 
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
     if (!formData.email || !formData.password) {
@@ -61,14 +69,14 @@ const LoginPage = () => {
       navigate('/');
       
       toast.success(`Welcome back, ${result.user.fullName}!`);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.message);
     } finally {
       setLoginLoading(false);
     }
   };
 
-  const handleInputChange = (e) => {
+  const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     const { name, value, type, checked } = e.target;
     setFormData(prev => ({
       ...prev,
@@ -76,7 +84,7 @@ const LoginPage = () => {
     }));
   };
 
-  const handleDemoLogin = async (account) => {
+  const handleDemoLogin = async (account: DemoAccount) => {
     setFormData({
       email: account.email,
       password: account.password,
@@ -92,7 +100,7 @@ const LoginPage = () => {
       navigate('/');
       
       toast.success(`Logged in as ${account.type}`);
-    } catch (error) {
+    } catch (error: any) {
       toast.error(error.message);
     } finally {
       setLoginLoading(false);
