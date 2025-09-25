@@ -8,19 +8,29 @@ const router = express.Router();
 
 // Initialize Firebase Admin SDK
 try {
+  console.log("Attempting to initialize Firebase Admin SDK...");
   const serviceAccountKey = process.env.FIREBASE_SERVICE_ACCOUNT_KEY;
 
   if (!serviceAccountKey) {
+    console.error("CRITICAL: FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not found.");
     throw new Error('FIREBASE_SERVICE_ACCOUNT_KEY environment variable is not set.');
   }
 
-  // The service account key from the environment variable may contain backslashes
-  // that are not properly escaped for JSON.parse. This includes newlines (as \n)
-  // and other literal backslashes in the key itself. The most robust solution
-  // is to replace all backslashes with double backslashes, which makes them
-  // valid escape characters in a JSON string.
-  const escapedServiceAccountKey = serviceAccountKey.replace(/\/g, '\\');
-  const serviceAccount = JSON.parse(escapedServiceAccountKey);
+  console.log("FIREBASE_SERVICE_ACCOUNT_KEY found.");
+  console.log("Key length:", serviceAccountKey.length);
+  console.log("Key starts with:", serviceAccountKey.substring(0, 30));
+  console.log("Key ends with:", serviceAccountKey.substring(serviceAccountKey.length - 30));
+
+  let serviceAccount;
+  try {
+    // Replace literal \n with actual newlines, which can be an issue with env vars
+    const escapedKey = serviceAccountKey.replace(/\\n/g, "\n");
+    serviceAccount = JSON.parse(escapedKey);
+  } catch (e) {
+    console.error("Failed to parse the service account key JSON.");
+    console.error("Parsing error:", e.message);
+    throw new Error("The FIREBASE_SERVICE_ACCOUNT_KEY could not be parsed as JSON.");
+  }
 
   admin.initializeApp({
     credential: admin.credential.cert(serviceAccount)
@@ -30,8 +40,7 @@ try {
 
 } catch (error) {
   console.error('CRITICAL: Failed to initialize Firebase Admin SDK. The server cannot start.');
-  console.error('Error details:', error.message);
-  console.error('This is often caused by an improperly formatted FIREBASE_SERVICE_ACCOUNT_KEY in the .env file.');
+  console.error('Final error:', error.message);
   process.exit(1);
 }
 
@@ -59,7 +68,11 @@ router.post('/login', async (req, res) => {
   const { email, password } = req.body;
 
   try {
+    // This is a simplified login. For production, you'd typically use the Firebase client-side SDK
+    // to sign in and then send the ID token to the backend for verification.
     const userRecord = await admin.auth().getUserByEmail(email);
+    // Note: This does not actually verify the user's password.
+    // A proper implementation would require client-side sign-in and token verification.
     const token = await admin.auth().createCustomToken(userRecord.uid);
 
     res.status(200).send({ token });
@@ -67,6 +80,7 @@ router.post('/login', async (req, res) => {
     res.status(401).send({ error: 'Invalid credentials' });
   }
 });
+
 
 // Get user profile
 router.get('/profile', async (req, res) => {
