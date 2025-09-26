@@ -1,15 +1,31 @@
-import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
 
-interface AuthContextType {
-  user: any;
-  login: (credentials: any) => Promise<void>;
+import React, { createContext, useState, useContext, ReactNode, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
+import api from '../services/api';
+import toast from 'react-hot-toast';
+
+interface User {
+  id: string;
+  fullName: string;
+  email: string;
+  role: 'citizen' | 'analyst' | 'official' | 'admin';
+}
+
+interface AuthState {
+  user: User | null;
+  token: string | null;
+  loading: boolean;
+  isAuthenticated: boolean;
+}
+
+interface AuthActions {
+  login: (email: string, password: string) => Promise<void>;
   logout: () => void;
   register: (userInfo: any) => Promise<void>;
   updateProfile: (profileInfo: any) => Promise<void>;
-  changePassword: (currentPassword: string, newPassword: string) => Promise<void>;
 }
 
-const AuthContext = createContext<AuthContextType | undefined>(undefined);
+const AuthContext = createContext<AuthActions & AuthState | undefined>(undefined);
 
 export const useAuth = () => {
   const context = useContext(AuthContext);
@@ -24,83 +40,87 @@ interface AuthProviderProps {
 }
 
 export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
-  const [user, setUser] = useState<any>(null);
+  const [user, setUser] = useState<User | null>(null);
+  const [token, setToken] = useState<string | null>(localStorage.getItem('token'));
+  const [loading, setLoading] = useState<boolean>(true);
+  const navigate = useNavigate();
 
   useEffect(() => {
-    // Try to load user from local storage on initial load
     const storedUser = localStorage.getItem('user');
-    if (storedUser) {
-      setUser(JSON.parse(storedUser));
+    if (token && storedUser) {
+      try {
+        setUser(JSON.parse(storedUser));
+      } catch (error) {
+        console.error('Failed to parse user data from storage', error);
+        // Clear corrupted data
+        localStorage.removeItem('user');
+        localStorage.removeItem('token');
+        setToken(null);
+      }
     }
-  }, []);
+    setLoading(false);
+  }, [token]);
 
-  const login = async (credentials: any) => {
-    // Simulate API call
-    return new Promise<void>((resolve, reject) => {
-      setTimeout(() => {
-        if (credentials.email === 'citizen@example.com') {
-          const userData = { email: credentials.email, role: 'citizen' };
-          setUser(userData);
-          localStorage.setItem('user', JSON.stringify(userData));
-          resolve();
-        } else if (credentials.email === 'officer@example.com') {
-          const userData = { email: credentials.email, role: 'officer' };
-          setUser(userData);
-          localStorage.setItem('user', JSON.stringify(userData));
-          resolve();
-        } else if (credentials.email === 'analyst@example.com') {
-          const userData = { email: credentials.email, role: 'analyst' };
-          setUser(userData);
-          localStorage.setItem('user', JSON.stringify(userData));
-          resolve();
-        } else {
-          reject(new Error('Invalid credentials'));
-        }
-      }, 500);
-    });
+  const login = async (email: string, password: string) => {
+    setLoading(true);
+    try {
+      const response = await api.post('/auth/login', { email, password });
+      const { user, token } = response.data;
+      localStorage.setItem('user', JSON.stringify(user));
+      localStorage.setItem('token', token);
+      setUser(user);
+      setToken(token);
+      toast.success('Login successful!');
+      navigate(user.role === 'admin' ? '/admin/dashboard' : '/');
+    } catch (error) {
+      toast.error('Login failed. Please check your credentials.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const logout = () => {
     setUser(null);
+    setToken(null);
     localStorage.removeItem('user');
+    localStorage.removeItem('token');
+    navigate('/login');
   };
 
   const register = async (userInfo: any) => {
-    // Simulate API call
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        const userData = { email: userInfo.email, role: 'citizen' }; // Default role
-        setUser(userData);
-        localStorage.setItem('user', JSON.stringify(userData));
-        resolve();
-      }, 500);
-    });
+    setLoading(true);
+    try {
+      await api.post('/auth/register', userInfo);
+      toast.success('Registration successful! Please log in.');
+      navigate('/login');
+    } catch (error) {
+      toast.error('Registration failed. Please try again.');
+    } finally {
+      setLoading(false);
+    }
   };
 
   const updateProfile = async (profileInfo: any) => {
-    // Simulate API call
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        const updatedUser = { ...user, ...profileInfo };
-        setUser(updatedUser);
-        localStorage.setItem('user', JSON.stringify(updatedUser));
-        resolve();
-      }, 500);
-    });
+    setLoading(true);
+    try {
+      const response = await api.put(`/users/${user?.id}`, profileInfo);
+      const updatedUser = response.data;
+      setUser(updatedUser);
+      localStorage.setItem('user', JSON.stringify(updatedUser));
+      toast.success('Profile updated successfully!');
+    } catch (error) {
+      toast.error('Failed to update profile.');
+    } finally {
+      setLoading(false);
+    }
   };
 
-  const changePassword = async (currentPassword: string, newPassword: string) => {
-    // Simulate API call - in a real app, you'd validate the current password
-    return new Promise<void>((resolve) => {
-      setTimeout(() => {
-        console.log('Password changed');
-        resolve();
-      }, 500);
-    });
-  };
+  const isAuthenticated = !loading && !!user;
 
   return (
-    <AuthContext.Provider value={{ user, login, logout, register, updateProfile, changePassword }}>
+    <AuthContext.Provider
+      value={{ user, token, loading, isAuthenticated, login, logout, register, updateProfile }}
+    >
       {children}
     </AuthContext.Provider>
   );
