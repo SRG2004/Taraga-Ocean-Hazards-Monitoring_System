@@ -8,7 +8,6 @@ import {
   Shield, 
   Activity,
   Bell,
-  Calendar,
   Users,
   FileText,
   DollarSign
@@ -25,7 +24,7 @@ export const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user }) => {
   const [lastUpdate, setLastUpdate] = useState<string>('');
 
   useEffect(() => {
-    const unsubscribe = realTimeHazardService.subscribe((newReports, hotspots) => {
+    const unsubscribe = realTimeHazardService.subscribe((newReports) => {
       setReports(newReports);
       setStatistics(realTimeHazardService.getStatistics());
       

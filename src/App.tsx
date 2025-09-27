@@ -7,6 +7,10 @@ import { CitizenDashboard } from './components/dashboards/CitizenDashboard';
 import { OfficialDashboard } from './components/dashboards/OfficialDashboard';
 import { AnalystDashboard } from './components/dashboards/AnalystDashboard';
 import { AdminDashboard } from './components/dashboards/AdminDashboard';
+import { ReportHazardForm } from './components/ReportHazardForm';
+import { SettingsPage } from './components/SettingsPage';
+import { DonationsInterface } from './components/DonationsInterface';
+import { SocialMediaMonitoring } from './components/SocialMediaMonitoring';
 import './styles/globals.css';
 
 // Modern futuristic dashboard component
@@ -149,6 +153,22 @@ const DashboardContent: React.FC<{ currentView: string; user: any }> = ({ curren
     );
   }
 
+  if (currentView === 'report-hazard') {
+    return <ReportHazardForm onClose={() => {}} onSubmit={(report) => console.log('Report submitted:', report)} />;
+  }
+
+  if (currentView === 'donations') {
+    return <DonationsInterface user={user} />;
+  }
+
+  if (currentView === 'settings') {
+    return <SettingsPage user={user} />;
+  }
+
+  if (currentView === 'social-media') {
+    return <SocialMediaMonitoring user={user} />;
+  }
+
   return (
     <div>
       <div className="card text-center py-12">
@@ -173,24 +193,6 @@ const DashboardContent: React.FC<{ currentView: string; user: any }> = ({ curren
   );
 };
 
-// Utility components
-const StatCard: React.FC<{ title: string; value: string; icon: string; trend: string; color: string }> = ({ title, value, icon, trend, color }) => (
-  <div className="card">
-    <div className="flex items-center justify-between mb-4">
-      <h3 className="text-gray-600 font-medium">{title}</h3>
-      <span className="text-2xl">{icon}</span>
-    </div>
-    <div className={`text-3xl font-bold mb-2 ${color}`}>{value}</div>
-    <p className="text-gray-500 text-sm">{trend}</p>
-  </div>
-);
-
-const ActionButton: React.FC<{ icon: string; label: string }> = ({ icon, label }) => (
-  <button className="btn-secondary p-4 flex flex-col items-center space-y-2">
-    <span className="text-2xl">{icon}</span>
-    <span className="text-sm font-medium">{label}</span>
-  </button>
-);
 
 const getFeatureList = (view: string) => {
   const features: Record<string, string[]> = {
