@@ -207,57 +207,29 @@ export const notificationService = {
   // Broadcast alert to all users
   async broadcastAlert(alertData) {
     try {
-      // In a real implementation, this would send to all users
-      // For now, we'll create a general alert
-      const alert = {
-        ...alertData,
-        userId: 'broadcast',
-        timestamp: new Date().toISOString()
-      };
+      const response = await axios.post(`${API_BASE_URL}/notifications/broadcast`, alertData, {
+        headers: this.getAuthHeaders(),
+      });
 
-      const docRef = await addDoc(collection(db, 'notifications'), alert);
-      
       // Show immediate toast
-      this.sendRealTimeNotification(alert);
+      this.sendRealTimeNotification(alertData);
 
-      return { success: true, alertId: docRef.id };
+      return { success: true, message: response.data.message };
     } catch (error) {
       console.error('Error broadcasting alert:', error);
-      throw error;
+      throw new Error(error.response?.data?.error || 'Failed to broadcast alert');
     }
   },
 
-  // Generate automated alerts based on reports
   async generateAutomatedAlerts() {
     try {
-      // This would analyze recent reports and generate alerts
-      const alerts = [
-        {
-          hazardType: 'cyclone',
-          location: 'Bay of Bengal',
-          severity: 'high',
-          message: 'Cyclone warning issued for Bay of Bengal. Fishermen advised to return to shore immediately.',
-          actionRequired: 'Avoid coastal areas and follow evacuation instructions'
-        },
-        {
-          hazardType: 'high_waves',
-          location: 'Chennai Coast',
-          severity: 'medium',
-          message: 'High waves reported at Chennai Marina Beach. Coast Guard advisory in effect.',
-          actionRequired: 'Stay away from beaches and rocky shores'
-        }
-      ];
-
-      const results = [];
-      for (const alert of alerts) {
-        const result = await this.sendHazardAlert(alert);
-        results.push(result);
-      }
-
-      return results;
+      const response = await axios.post(`${API_BASE_URL}/alerts/generate`, {}, {
+        headers: this.getAuthHeaders(),
+      });
+      return response.data;
     } catch (error) {
       console.error('Error generating automated alerts:', error);
-      throw error;
+      throw new Error(error.response?.data?.error || 'Failed to generate automated alerts');
     }
   },
 

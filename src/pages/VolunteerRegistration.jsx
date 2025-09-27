@@ -1,153 +1,68 @@
 import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
 import { useApp } from '../contexts/AppContext';
 import toast from 'react-hot-toast';
 import './VolunteerRegistration.css';
 
 const VolunteerRegistration = () => {
-  const navigate = useNavigate();
+  const [name, setName] = useState('');
+  const [email, setEmail] = useState('');
+  const [skills, setSkills] = useState('');
   const { registerVolunteer } = useApp();
-  const [loading, setLoading] = useState(false);
-  const [formData, setFormData] = useState({
-    fullName: '',
-    email: '',
-    phone: '',
-    password: '',
-    skills: '',
-    availability: 'Weekends'
-  });
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    setLoading(true);
     try {
-      await registerVolunteer(formData);
-      toast.success('Volunteer registration successful!');
-      navigate('/login'); // Redirect to login after registration
+      await registerVolunteer({ name, email, skills });
+      toast.success('Thank you for registering as a volunteer!');
+      setName('');
+      setEmail('');
+      setSkills('');
     } catch (error) {
-      toast.error(error.message || 'Failed to register volunteer.');
-    } finally {
-      setLoading(false);
+      toast.error(`Registration failed: ${error.message}`);
     }
   };
 
-  const handleInputChange = (e) => {
-    const { name, value } = e.target;
-    setFormData(prev => ({
-      ...prev,
-      [name]: value
-    }));
-  };
-
   return (
-    <div className="volunteer-registration">
+    <div className="volunteer-registration-page">
       <div className="registration-container">
-        <div className="registration-card">
-          <div className="registration-header">
-            <button 
-              className="back-button"
-              onClick={() => navigate('/')}
-            >
-              ← Back to Home
-            </button>
-            <h1 className="registration-title">Volunteer Registration</h1>
-            <p className="registration-subtitle">
-              Join our community of ocean hazard response volunteers
-            </p>
+        <header className="registration-header">
+          <h1>Volunteer Registration</h1>
+          <p>Join our team of dedicated volunteers and make a difference.</p>
+        </header>
+
+        <form onSubmit={handleSubmit} className="registration-form">
+          <div className="form-group">
+            <label htmlFor="name">Full Name</label>
+            <input
+              id="name"
+              type="text"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+              required
+            />
           </div>
-
-          <form className="registration-form" onSubmit={handleSubmit}>
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="fullName">Full Name *</label>
-                <input
-                  type="text"
-                  id="fullName"
-                  name="fullName"
-                  value={formData.fullName}
-                  onChange={handleInputChange}
-                  placeholder="Enter your full name"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="email">Email Address *</label>
-                <input
-                  type="email"
-                  id="email"
-                  name="email"
-                  value={formData.email}
-                  onChange={handleInputChange}
-                  placeholder="Enter your email"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="password">Password *</label>
-                <input
-                  type="password"
-                  id="password"
-                  name="password"
-                  value={formData.password}
-                  onChange={handleInputChange}
-                  placeholder="Enter your password"
-                  required
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="phone">Phone Number *</label>
-                <input
-                  type="tel"
-                  id="phone"
-                  name="phone"
-                  value={formData.phone}
-                  onChange={handleInputChange}
-                  placeholder="Enter your phone"
-                  required
-                />
-              </div>
-            </div>
-
-            <div className="form-row">
-              <div className="form-group">
-                <label htmlFor="skills">Skills & Expertise</label>
-                <textarea
-                  id="skills"
-                  name="skills"
-                  value={formData.skills}
-                  onChange={handleInputChange}
-                  placeholder="e.g., First Aid, Swimming, Communication, etc."
-                  rows="3"
-                />
-              </div>
-              <div className="form-group">
-                <label htmlFor="availability">Availability</label>
-                <select
-                  id="availability"
-                  name="availability"
-                  value={formData.availability}
-                  onChange={handleInputChange}
-                >
-                  <option value="Weekends">Weekends</option>
-                  <option value="Weekdays">Weekdays</option>
-                  <option value="Full-time">Full-time</option>
-                  <option value="Emergency Only">Emergency Only</option>
-                </select>
-              </div>
-            </div>
-
-            <button type="submit" className="register-button" disabled={loading}>
-              {loading ? 'Registering...' : 'Register as Volunteer'}
-            </button>
-          </form>
-
-          <div className="registration-footer">
-            <p>Already registered? <button onClick={() => navigate('/login')} className="sign-in-link">Sign In</button></p>
+          <div className="form-group">
+            <label htmlFor="email">Email Address</label>
+            <input
+              id="email"
+              type="email"
+              value={email}
+              onChange={(e) => setEmail(e.target.value)}
+              required
+            />
           </div>
-        </div>
+          <div className="form-group">
+            <label htmlFor="skills">Skills and Experience</label>
+            <textarea
+              id="skills"
+              value={skills}
+              onChange={(e) => setSkills(e.target.value)}
+              placeholder="Let us know how you can help (e.g., medical, logistics, communication)"
+              rows={4}
+            />
+          </div>
+          <button type="submit" className="btn-register">Register to Volunteer</button>
+        </form>
       </div>
     </div>
   );

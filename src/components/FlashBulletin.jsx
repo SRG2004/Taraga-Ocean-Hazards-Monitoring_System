@@ -1,6 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import './FlashBulletin.css';
 
 const FlashBulletin = () => {
   const [bulletins, setBulletins] = useState([]);
@@ -47,10 +46,10 @@ const FlashBulletin = () => {
   // Loading state
   if (loading) {
     return (
-      <div className="flash-bulletin-container loading">
-        <div className="bulletin-loading">
-          <div className="loading-spinner">🌊</div>
-          <span>Loading safety bulletins...</span>
+      <div className="p-4 bg-gray-100 rounded-lg text-center">
+        <div className="animate-pulse">
+          <div className="inline-block text-2xl">🌊</div>
+          <span className="ml-2">Loading safety bulletins...</span>
         </div>
       </div>
     );
@@ -59,11 +58,11 @@ const FlashBulletin = () => {
   // Error state
   if (error && bulletins.length === 0) {
     return (
-      <div className="flash-bulletin-container error">
-        <div className="bulletin-error">
-          <span className="error-icon">⚠️</span>
-          <span>Unable to load safety bulletins</span>
-          <button onClick={fetchBulletins} className="retry-button">
+      <div className="p-4 bg-red-100 text-red-700 rounded-lg text-center">
+        <div className="flex items-center justify-center">
+          <span className="text-2xl">⚠️</span>
+          <span className="ml-2">Unable to load safety bulletins</span>
+          <button onClick={fetchBulletins} className="ml-4 px-3 py-1 bg-red-500 text-white rounded hover:bg-red-600">
             Retry
           </button>
         </div>
@@ -96,93 +95,82 @@ const FlashBulletin = () => {
   };
 
   return (
-    <div className="flash-bulletin-container">
-      <div 
-        className={`flash-bulletin ${currentBulletin.severity}`}
-        style={{ '--bulletin-color': currentBulletin.color }}
-      >
+    <div className={`p-4 rounded-lg shadow-md border-l-4 ${currentBulletin.color}`}>
+      <div className="flex items-start">
         {/* Header */}
-        <div className="bulletin-header">
-          <div className="bulletin-icon">
-            {currentBulletin.icon}
-          </div>
-          <div className="bulletin-title-section">
-            <h3 className="bulletin-title">{currentBulletin.title}</h3>
-            <span className="bulletin-area">{currentBulletin.affectedAreas}</span>
-          </div>
-          <div className="bulletin-severity">
-            <span className={`severity-badge ${currentBulletin.severity}`}>
+        <div className="flex-shrink-0 text-3xl mr-4">{currentBulletin.icon}</div>
+        <div className="flex-grow">
+          <div className="flex justify-between items-start">
+            <div>
+              <h3 className="font-bold text-lg">{currentBulletin.title}</h3>
+              <span className="text-sm text-gray-600">{currentBulletin.affectedAreas}</span>
+            </div>
+            <span className={`px-2 py-1 text-xs font-semibold rounded-full ${currentBulletin.severity}`}>
               {currentBulletin.severity.toUpperCase()}
             </span>
           </div>
-        </div>
 
-        {/* Message */}
-        <div className="bulletin-message">
-          <p>{currentBulletin.message}</p>
-        </div>
+          {/* Message */}
+          <p className="text-sm mt-2">{currentBulletin.message}</p>
 
-        {/* Action Items */}
-        {currentBulletin.actionItems && currentBulletin.actionItems.length > 0 && (
-          <div className="bulletin-actions">
-            <h4>Safety Guidelines:</h4>
-            <ul>
-              {currentBulletin.actionItems.slice(0, 3).map((action, index) => (
-                <li key={index}>{action}</li>
-              ))}
-            </ul>
-          </div>
-        )}
-
-        {/* Footer */}
-        <div className="bulletin-footer">
-          <div className="bulletin-timestamp">
-            Last updated: {new Date(currentBulletin.timestamp).toLocaleTimeString()}
-          </div>
-          <div className="bulletin-expires">
-            Valid until: {new Date(currentBulletin.expiresAt).toLocaleTimeString()}
-          </div>
-        </div>
-
-        {/* Navigation controls */}
-        {bulletins.length > 1 && (
-          <div className="bulletin-controls">
-            <button 
-              className="bulletin-nav prev"
-              onClick={handlePrevious}
-              aria-label="Previous bulletin"
-            >
-              ‹
-            </button>
-            
-            <div className="bulletin-indicators">
-              {bulletins.map((_, index) => (
-                <button
-                  key={index}
-                  className={`indicator ${index === currentBulletinIndex ? 'active' : ''}`}
-                  onClick={() => handleDotClick(index)}
-                  aria-label={`Go to bulletin ${index + 1}`}
-                />
-              ))}
+          {/* Action Items */}
+          {currentBulletin.actionItems && currentBulletin.actionItems.length > 0 && (
+            <div className="mt-3">
+              <h4 className="text-xs font-semibold">Safety Guidelines:</h4>
+              <ul className="list-disc list-inside text-sm text-gray-700">
+                {currentBulletin.actionItems.slice(0, 3).map((action, index) => (
+                  <li key={index}>{action}</li>
+                ))}
+              </ul>
             </div>
-            
-            <button 
-              className="bulletin-nav next"
-              onClick={handleNext}
-              aria-label="Next bulletin"
-            >
-              ›
-            </button>
-          </div>
-        )}
+          )}
 
-        {/* Auto-scroll indicator */}
-        {bulletins.length > 1 && isAutoScrollEnabled && (
-          <div className="auto-scroll-indicator">
-            <div className="auto-scroll-progress"></div>
+          {/* Footer */}
+          <div className="text-xs text-gray-500 mt-3 flex justify-between">
+            <div>Last updated: {new Date(currentBulletin.timestamp).toLocaleTimeString()}</div>
+            <div>Valid until: {new Date(currentBulletin.expiresAt).toLocaleTimeString()}</div>
           </div>
-        )}
+        </div>
       </div>
+
+      {/* Navigation controls */}
+      {bulletins.length > 1 && (
+        <div className="flex justify-center items-center mt-3">
+          <button 
+            className="px-3 py-1 rounded-full bg-gray-200 hover:bg-gray-300"
+            onClick={handlePrevious}
+            aria-label="Previous bulletin"
+          >
+            ‹
+          </button>
+          
+          <div className="flex mx-2">
+            {bulletins.map((_, index) => (
+              <button
+                key={index}
+                className={`w-2 h-2 rounded-full mx-1 ${index === currentBulletinIndex ? 'bg-gray-800' : 'bg-gray-400'}`}
+                onClick={() => handleDotClick(index)}
+                aria-label={`Go to bulletin ${index + 1}`}
+              />
+            ))}
+          </div>
+          
+          <button 
+            className="px-3 py-1 rounded-full bg-gray-200 hover:bg-gray-300"
+            onClick={handleNext}
+            aria-label="Next bulletin"
+          >
+            ›
+          </button>
+        </div>
+      )}
+
+      {/* Auto-scroll indicator */}
+      {bulletins.length > 1 && isAutoScrollEnabled && (
+        <div className="h-1 bg-gray-200 mt-2 rounded-full overflow-hidden">
+          <div className="h-1 bg-blue-500 animate-pulse" style={{ width: '100%' }}></div>
+        </div>
+      )}
     </div>
   );
 };
