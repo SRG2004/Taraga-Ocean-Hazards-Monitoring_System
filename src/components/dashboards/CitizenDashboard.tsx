@@ -106,7 +106,7 @@ export const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user }) => {
       )}
 
       {/* Statistics Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6">
         <div className="card">
           <div className="flex items-center justify-between mb-4">
             <h3 className="text-gray-600 font-medium">Active Alerts</h3>
@@ -145,7 +145,7 @@ export const CitizenDashboard: React.FC<CitizenDashboardProps> = ({ user }) => {
       </div>
 
       {/* Main Content Grid */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      <div className="grid grid-cols-1 lg:grid-cols-2 xl:grid-cols-3 gap-4 sm:gap-6">
         {/* Quick Actions */}
         <div className="card">
           <h3 className="text-xl font-semibold text-gray-900 mb-6">Quick Actions</h3>

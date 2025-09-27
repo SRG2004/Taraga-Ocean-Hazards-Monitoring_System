@@ -86,14 +86,29 @@ h2 {
   display: inline-flex;
   align-items: center;
   justify-content: center;
-  padding: 0.75rem 1.5rem;
+  padding: 0.5rem 1rem;
   border-radius: var(--radius);
   font-weight: 500;
   transition: all 0.2s ease;
   cursor: pointer;
   border: none;
   text-decoration: none;
-  font-size: 0.875rem;
+  font-size: 0.8rem;
+  min-height: 40px;
+  white-space: nowrap;
+}
+
+@media (min-width: 640px) {
+  .btn {
+    padding: 0.75rem 1.25rem;
+    font-size: 0.875rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .btn {
+    padding: 0.75rem 1.5rem;
+  }
 }
 
 .btn-primary {
@@ -164,13 +179,26 @@ h2 {
   color: var(--foreground-muted);
 }
 
-/* Simple cards */
+/* Responsive cards */
 .card {
   background: var(--background-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 1.5rem;
+  padding: 1rem;
   box-shadow: var(--shadow-sm);
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .card {
+    padding: 1.25rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card {
+    padding: 1.5rem;
+  }
 }
 
 .card-hover:hover {
@@ -181,8 +209,21 @@ h2 {
   background: var(--background-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
-  padding: 2rem;
+  padding: 1rem;
   box-shadow: var(--shadow);
+  transition: all 0.2s ease;
+}
+
+@media (min-width: 640px) {
+  .card-feature {
+    padding: 1.5rem;
+  }
+}
+
+@media (min-width: 1024px) {
+  .card-feature {
+    padding: 2rem;
+  }
 }
 
 /* Loading spinner */

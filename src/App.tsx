@@ -52,8 +52,8 @@ const FuturisticDashboard: React.FC<{ user: any; onLogout: () => void }> = ({ us
 
       <div className="relative z-10 flex min-h-screen">
         {/* Sidebar */}
-        <nav className="w-64 bg-white border-r border-gray-200 p-6">
-          <div className="space-y-2">
+        <nav className="w-64 md:w-72 lg:w-80 bg-white border-r border-gray-200 p-4 sm:p-6 flex-shrink-0">
+          <div className="space-y-1 sm:space-y-2">
             <NavButton 
               active={currentView === `${user.role}-dashboard`}
               onClick={() => setCurrentView(`${user.role}-dashboard`)}
@@ -98,9 +98,11 @@ const FuturisticDashboard: React.FC<{ user: any; onLogout: () => void }> = ({ us
         </nav>
 
         {/* Main Content */}
-        <main className="flex-1 p-6 bg-gray-50">
-          <div className="max-w-6xl mx-auto">
-            <DashboardContent currentView={currentView} user={user} />
+        <main className="flex-1 bg-gray-50 overflow-x-auto">
+          <div className="min-h-screen w-full p-4 sm:p-6 lg:p-8">
+            <div className="max-w-full">
+              <DashboardContent currentView={currentView} user={user} />
+            </div>
           </div>
         </main>
       </div>
@@ -112,14 +114,14 @@ const FuturisticDashboard: React.FC<{ user: any; onLogout: () => void }> = ({ us
 const NavButton: React.FC<{ active?: boolean; onClick: () => void; icon: string; label: string }> = ({ active, onClick, icon, label }) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+    className={`w-full flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-all duration-200 text-left ${
       active 
         ? 'bg-blue-50 border border-blue-200 text-blue-700' 
         : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
     }`}
   >
-    <span className="text-lg">{icon}</span>
-    <span className="font-medium">{label}</span>
+    <span className="text-base sm:text-lg flex-shrink-0">{icon}</span>
+    <span className="font-medium text-sm sm:text-base truncate">{label}</span>
   </button>
 );
 
