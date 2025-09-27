@@ -7,12 +7,17 @@ import { MapErrorBoundary } from './MapErrorBoundary';
 import { MapPin, Search, Filter, AlertTriangle, Activity } from 'lucide-react';
 
 // Fix for default markers in react-leaflet
-delete Icon.Default.prototype._getIconUrl;
-Icon.Default.mergeOptions({
-  iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon-2x.png',
-  iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon.png',
-  shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png'
-});
+try {
+  // @ts-ignore - Known fix for leaflet default markers  
+  delete Icon.Default.prototype._getIconUrl;
+  Icon.Default.mergeOptions({
+    iconRetinaUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon-2x.png',
+    iconUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-icon.png',
+    shadowUrl: 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.3.1/images/marker-shadow.png'
+  });
+} catch (error) {
+  console.warn('Leaflet icon fix failed:', error);
+}
 
 // Simple custom icons
 const createSimpleIcon = (severity: string) => {
