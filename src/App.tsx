@@ -2,7 +2,11 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
 import SimpleLoginPage from './pages/SimpleLoginPage';
-import MinimalHazardMap from './components/MinimalHazardMap';
+import { MinimalHazardMap } from './components/MinimalHazardMap';
+import { CitizenDashboard } from './components/dashboards/CitizenDashboard';
+import { OfficialDashboard } from './components/dashboards/OfficialDashboard';
+import { AnalystDashboard } from './components/dashboards/AnalystDashboard';
+import { AdminDashboard } from './components/dashboards/AdminDashboard';
 import './styles/globals.css';
 
 // Modern futuristic dashboard component
@@ -118,100 +122,20 @@ const NavButton: React.FC<{ active?: boolean; onClick: () => void; icon: string;
 // Dashboard Content Component
 const DashboardContent: React.FC<{ currentView: string; user: any }> = ({ currentView, user }) => {
   if (currentView === `${user.role}-dashboard`) {
-    return (
-      <div>
-        <div className="mb-8">
-          <h2 className="text-3xl font-bold text-gray-900 mb-2">Welcome back, {user.fullName}!</h2>
-          <p className="text-gray-600">Your {user.role} dashboard is ready for action.</p>
-        </div>
-
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
-          <StatCard 
-            title="Active Alerts" 
-            value="12" 
-            icon="🚨" 
-            trend="+2 from yesterday"
-            color="text-red-600"
-          />
-          <StatCard 
-            title="Reports Today" 
-            value="47" 
-            icon="📊" 
-            trend="+15% from last week"
-            color="text-blue-600"
-          />
-          <StatCard 
-            title="System Status" 
-            value="Operational" 
-            icon="✅" 
-            trend="All systems green"
-            color="text-green-600"
-          />
-        </div>
-
-        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
-          <div className="card">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Recent Activity</h3>
-            <div className="space-y-3">
-              {[
-                { time: '2 min ago', event: 'New hazard report submitted', type: 'info' },
-                { time: '15 min ago', event: 'Alert sent to coastal regions', type: 'warning' },
-                { time: '1 hour ago', event: 'System backup completed', type: 'success' },
-              ].map((item, i) => (
-                <div key={i} className="flex items-center space-x-3 p-3 rounded-lg bg-gray-50">
-                  <div className={`w-2 h-2 rounded-full ${
-                    item.type === 'info' ? 'bg-blue-500' : 
-                    item.type === 'warning' ? 'bg-yellow-500' : 'bg-green-500'
-                  }`} />
-                  <div className="flex-1">
-                    <p className="text-gray-900 text-sm">{item.event}</p>
-                    <p className="text-gray-500 text-xs">{item.time}</p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="card">
-            <h3 className="text-xl font-semibold text-gray-900 mb-4">Quick Actions</h3>
-            <div className="grid grid-cols-2 gap-3">
-              {user.role === 'citizen' && (
-                <>
-                  <ActionButton icon="📝" label="Report Hazard" />
-                  <ActionButton icon="🗺️" label="View Map" />
-                  <ActionButton icon="💰" label="Donate" />
-                  <ActionButton icon="👥" label="Volunteer" />
-                </>
-              )}
-              {user.role === 'analyst' && (
-                <>
-                  <ActionButton icon="📊" label="Generate Report" />
-                  <ActionButton icon="📱" label="Monitor Social" />
-                  <ActionButton icon="🔍" label="Analyze Data" />
-                  <ActionButton icon="📈" label="View Trends" />
-                </>
-              )}
-              {user.role === 'official' && (
-                <>
-                  <ActionButton icon="🚨" label="Create Alert" />
-                  <ActionButton icon="📞" label="Contact Teams" />
-                  <ActionButton icon="📦" label="Deploy Resources" />
-                  <ActionButton icon="📋" label="Review Reports" />
-                </>
-              )}
-              {(user.role === 'admin' || user.role === 'Admin') && (
-                <>
-                  <ActionButton icon="⚙️" label="System Config" />
-                  <ActionButton icon="👤" label="Manage Users" />
-                  <ActionButton icon="🛡️" label="Security" />
-                  <ActionButton icon="📊" label="Analytics" />
-                </>
-              )}
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    // Render role-specific dashboard components
+    switch (user.role) {
+      case 'citizen':
+        return <CitizenDashboard user={user} />;
+      case 'official':
+        return <OfficialDashboard user={user} />;
+      case 'analyst':
+        return <AnalystDashboard user={user} />;
+      case 'admin':
+      case 'Admin':
+        return <AdminDashboard user={user} />;
+      default:
+        return <CitizenDashboard user={user} />;
+    }
   }
 
   // Specific views based on user role and currentView

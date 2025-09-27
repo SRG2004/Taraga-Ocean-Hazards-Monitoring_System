@@ -3,6 +3,7 @@ import { MapContainer, TileLayer, Marker, Popup, Circle, useMap } from 'react-le
 import { Icon } from 'leaflet';
 import 'leaflet/dist/leaflet.css';
 import { realTimeHazardService, LocationSearchService, type HazardReport, type Hotspot } from '../services/realTimeHazardService';
+import { MapErrorBoundary } from './MapErrorBoundary';
 import { MapPin, Search, Filter, AlertTriangle, Activity } from 'lucide-react';
 
 // Fix for default markers in react-leaflet
@@ -299,11 +300,12 @@ const MinimalHazardMap: React.FC<MinimalHazardMapProps> = ({
 
       {/* Map Container */}
       <div className="bg-white border border-gray-200 rounded-lg overflow-hidden" style={{ height }}>
-        <MapContainer
-          center={mapCenter}
-          zoom={mapZoom}
-          style={{ width: '100%', height: '100%' }}
-        >
+        <MapErrorBoundary>
+          <MapContainer
+            center={mapCenter}
+            zoom={mapZoom}
+            style={{ width: '100%', height: '100%' }}
+          >
           <MapUpdater center={mapCenter} zoom={mapZoom} />
           
           <TileLayer
@@ -414,7 +416,8 @@ const MinimalHazardMap: React.FC<MinimalHazardMapProps> = ({
               </Popup>
             </Circle>
           ))}
-        </MapContainer>
+          </MapContainer>
+        </MapErrorBoundary>
       </div>
 
       {/* Selected Report Details Panel */}
@@ -461,4 +464,5 @@ const MinimalHazardMap: React.FC<MinimalHazardMapProps> = ({
   );
 };
 
+export { MinimalHazardMap };
 export default MinimalHazardMap;
