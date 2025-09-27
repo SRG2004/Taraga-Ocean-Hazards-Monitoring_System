@@ -79,3 +79,43 @@ body {
   margin: 0 auto;
   padding: 0 1rem;
 }
+
+/* App Layout Styles */
+.app-container {
+  min-height: 100vh;
+  background-color: #f8fafc;
+}
+
+.loading-container {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  min-height: 100vh;
+  font-size: 1.2rem;
+  color: #6b7280;
+}
+
+.authenticated-layout {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+}
+
+.main-layout {
+  display: flex;
+  flex: 1;
+}
+
+.main-content {
+  flex: 1;
+  padding: 1rem;
+  overflow-y: auto;
+  background-color: #ffffff;
+}
+
+/* Responsive behavior */
+@media (max-width: 768px) {
+  .main-layout {
+    flex-direction: column;
+  }
+}
