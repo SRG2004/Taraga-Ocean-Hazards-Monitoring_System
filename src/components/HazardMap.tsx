@@ -28,7 +28,7 @@ interface Report {
 const HazardMap: React.FC = () => {
   const { isLoaded } = useJsApiLoader({
     id: 'google-map-script',
-    googleMapsApiKey: "AIzaSyDpMc5FqjK_tTqGIheS8LNZIXyL9-rufqo"
+    googleMapsApiKey: import.meta.env.VITE_GOOGLE_MAPS_API_KEY || ""
   })
 
   const [reports, setReports] = useState<Report[]>([]);
