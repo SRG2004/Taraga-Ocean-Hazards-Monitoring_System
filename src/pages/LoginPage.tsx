@@ -63,14 +63,14 @@ const LoginPage: React.FC = () => {
 
     setLoginLoading(true);
     try {
-      const result = await login(formData.email, formData.password);
+      await login(formData.email, formData.password);
       
       // Redirect all users to homepage after login
       navigate('/');
       
-      toast.success(`Welcome back, ${result.user.fullName}!`);
+      toast.success(`Login successful!`);
     } catch (error: any) {
-      toast.error(error.message);
+      toast.error(error.message || 'Login failed');
     } finally {
       setLoginLoading(false);
     }
@@ -94,7 +94,7 @@ const LoginPage: React.FC = () => {
     // Automatically login with demo account
     setLoginLoading(true);
     try {
-      const result = await login(account.email, account.password);
+      await login(account.email, account.password);
       
       // Redirect all users to homepage after login
       navigate('/');

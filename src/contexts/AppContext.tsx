@@ -3,6 +3,13 @@ import { AuthProvider, useAuth } from './AuthContext';
 
 interface AppContextType {
   user: any;
+  token: string | null;
+  loading: boolean;
+  isAuthenticated: boolean;
+  login: (email: string, password: string) => Promise<void>;
+  logout: () => void;
+  register: (userInfo: any) => Promise<void>;
+  updateProfile: (profileInfo: any) => Promise<void>;
   reports: any[];
   donations: any[];
   volunteers: any[];
@@ -28,7 +35,7 @@ interface AppProviderProps {
 }
 
 const AppProviderInternal: React.FC<AppProviderProps> = ({ children }) => {
-  const { user } = useAuth();
+  const { user, token, loading, isAuthenticated, login, logout, register, updateProfile } = useAuth();
   const [reports, setReports] = useState<any[]>([]);
   const [donations, setDonations] = useState<any[]>([]);
   const [volunteers, setVolunteers] = useState<any[]>([]);
@@ -84,7 +91,7 @@ const AppProviderInternal: React.FC<AppProviderProps> = ({ children }) => {
     if (user) {
       // Load data based on user role
       loadReports();
-      if (user.role === 'officer') {
+      if (user.role === 'official') {
         loadDonations();
         loadVolunteers();
       }
@@ -92,7 +99,24 @@ const AppProviderInternal: React.FC<AppProviderProps> = ({ children }) => {
   }, [user]);
 
   return (
-    <AppContext.Provider value={{ user, reports, donations, volunteers, loadReports, loadDonations, loadVolunteers, processDonation, registerVolunteer }}>
+    <AppContext.Provider value={{ 
+      user, 
+      token, 
+      loading, 
+      isAuthenticated, 
+      login, 
+      logout, 
+      register, 
+      updateProfile, 
+      reports, 
+      donations, 
+      volunteers, 
+      loadReports, 
+      loadDonations, 
+      loadVolunteers, 
+      processDonation, 
+      registerVolunteer 
+    }}>
       {children}
     </AppContext.Provider>
   );
