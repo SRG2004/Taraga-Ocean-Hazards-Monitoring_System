@@ -7,71 +7,44 @@
 :root {
   --font-size: 16px;
   
-  /* Modern gradient-enhanced theme */
+  /* Clean, minimal theme */
   --background: #ffffff;
   --background-secondary: #f8fafc;
   --background-card: #ffffff;
-  --background-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --background-subtle: linear-gradient(135deg, #f5f7fa 0%, #c3cfe2 100%);
   
   --foreground: #0f172a;
   --foreground-secondary: #64748b;
   --foreground-muted: #94a3b8;
   
-  /* Enhanced primary colors with gradients */
+  /* Simple primary colors */
   --primary: #2563eb;
   --primary-dark: #1d4ed8;
   --primary-light: #3b82f6;
-  --primary-gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-  --primary-hover: linear-gradient(135deg, #5a6fd8 0%, #6a4190 100%);
   
-  /* Status colors with enhanced variants */
+  /* Status colors */
   --success: #059669;
-  --success-light: #10b981;
-  --success-gradient: linear-gradient(135deg, #10b981 0%, #059669 100%);
   --warning: #d97706;
-  --warning-light: #f59e0b;
-  --warning-gradient: linear-gradient(135deg, #f59e0b 0%, #d97706 100%);
   --error: #dc2626;
-  --error-light: #ef4444;
-  --error-gradient: linear-gradient(135deg, #ef4444 0%, #dc2626 100%);
   --info: #0891b2;
-  --info-light: #06b6d4;
-  --info-gradient: linear-gradient(135deg, #06b6d4 0%, #0891b2 100%);
   
   --border: #e2e8f0;
-  --border-hover: #cbd5e1;
-  --radius: 12px;
-  --radius-sm: 8px;
-  --radius-lg: 16px;
+  --radius: 8px;
   
-  /* Enhanced shadows with depth */
+  /* Minimal shadows */
   --shadow-sm: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-  --shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
-  --shadow-md: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
-  --shadow-lg: 0 20px 25px -5px rgba(0, 0, 0, 0.1), 0 10px 10px -5px rgba(0, 0, 0, 0.04);
-  --shadow-xl: 0 25px 50px -12px rgba(0, 0, 0, 0.25);
-  --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.15);
-  
-  /* Animation variables */
-  --transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  --transition-fast: all 0.15s ease-out;
+  --shadow: 0 1px 3px 0 rgba(0, 0, 0, 0.1), 0 1px 2px 0 rgba(0, 0, 0, 0.06);
 }
 
 [data-theme="dark"] {
   --background: #0f172a;
   --background-secondary: #1e293b;
   --background-card: #1e293b;
-  --background-gradient: linear-gradient(135deg, #1e293b 0%, #334155 100%);
-  --background-subtle: linear-gradient(135deg, #1e293b 0%, #475569 100%);
   
   --foreground: #f1f5f9;
   --foreground-secondary: #94a3b8;
   --foreground-muted: #64748b;
   
   --border: #334155;
-  --border-hover: #475569;
-  --shadow-glow: 0 0 20px rgba(102, 126, 234, 0.3);
 }
 
 * {
@@ -107,160 +80,119 @@ h2 {
   font-weight: 600;
 }
 
-/* Enhanced modern utility classes */
+/* Simple, minimal utility classes */
 
 .btn {
   display: inline-flex;
   align-items: center;
   justify-content: center;
   padding: 0.75rem 1.5rem;
-  border-radius: var(--radius-sm);
-  font-weight: 600;
-  transition: var(--transition);
+  border-radius: var(--radius);
+  font-weight: 500;
+  transition: all 0.2s ease;
   cursor: pointer;
   border: none;
   text-decoration: none;
   font-size: 0.875rem;
-  position: relative;
-  overflow: hidden;
-  transform: translateY(0);
-}
-
-.btn:hover {
-  transform: translateY(-2px);
-  box-shadow: var(--shadow-lg);
-}
-
-.btn:active {
-  transform: translateY(0);
 }
 
 .btn-primary {
-  background: var(--primary-gradient);
+  background: var(--primary);
   color: white;
-  box-shadow: var(--shadow);
 }
 
 .btn-primary:hover {
-  background: var(--primary-hover);
-  box-shadow: var(--shadow-glow), var(--shadow-lg);
+  background: var(--primary-dark);
 }
 
 .btn-secondary {
-  background: var(--background-card);
+  background: var(--background-secondary);
   color: var(--foreground);
   border: 1px solid var(--border);
-  box-shadow: var(--shadow-sm);
 }
 
 .btn-secondary:hover {
-  background: var(--background-secondary);
-  border-color: var(--border-hover);
-  color: var(--foreground);
+  background: var(--foreground-muted);
+  color: white;
 }
 
 .btn-success {
-  background: var(--success-gradient);
+  background: var(--success);
   color: white;
-  box-shadow: var(--shadow);
 }
 
 .btn-success:hover {
-  box-shadow: 0 0 20px rgba(16, 185, 129, 0.3), var(--shadow-lg);
+  background: #047857;
 }
 
 .btn-warning {
-  background: var(--warning-gradient);
+  background: var(--warning);
   color: white;
-  box-shadow: var(--shadow);
 }
 
 .btn-warning:hover {
-  box-shadow: 0 0 20px rgba(245, 158, 11, 0.3), var(--shadow-lg);
+  background: #b45309;
 }
 
 .btn-error {
-  background: var(--error-gradient);
+  background: var(--error);
   color: white;
-  box-shadow: var(--shadow);
 }
 
 .btn-error:hover {
-  box-shadow: 0 0 20px rgba(239, 68, 68, 0.3), var(--shadow-lg);
+  background: #b91c1c;
 }
 
-/* Enhanced modern inputs */
+/* Clean inputs */
 .input {
   width: 100%;
-  padding: 0.875rem 1rem;
+  padding: 0.75rem;
   background: var(--background);
-  border: 2px solid var(--border);
-  border-radius: var(--radius-sm);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   color: var(--foreground);
   font-size: 0.875rem;
-  transition: var(--transition);
-  font-weight: 500;
+  transition: border-color 0.2s ease;
 }
 
 .input:focus {
   outline: none;
   border-color: var(--primary);
-  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
-  transform: translateY(-1px);
 }
 
 .input::placeholder {
   color: var(--foreground-muted);
-  font-weight: 400;
 }
 
-/* Enhanced modern cards */
+/* Simple cards */
 .card {
   background: var(--background-card);
   border: 1px solid var(--border);
   border-radius: var(--radius);
   padding: 1.5rem;
   box-shadow: var(--shadow-sm);
-  transition: var(--transition);
-  position: relative;
 }
 
-.card:hover {
-  box-shadow: var(--shadow-md);
-  transform: translateY(-2px);
-  border-color: var(--border-hover);
-}
-
-.card-gradient {
-  background: var(--background-subtle);
-  border: none;
+.card-hover:hover {
+  box-shadow: var(--shadow);
 }
 
 .card-feature {
   background: var(--background-card);
-  border: 2px solid var(--border);
-  border-radius: var(--radius-lg);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
   padding: 2rem;
   box-shadow: var(--shadow);
-  transition: var(--transition);
 }
 
-.card-feature:hover {
-  box-shadow: var(--shadow-xl);
-  transform: translateY(-4px);
-  border-color: var(--primary-light);
-}
-
-/* Enhanced loading spinner */
+/* Loading spinner */
 .loading {
-  width: 24px;
-  height: 24px;
-  border: 3px solid transparent;
-  border-top: 3px solid var(--primary);
-  border-right: 3px solid var(--primary-light);
+  width: 20px;
+  height: 20px;
+  border: 2px solid var(--border);
+  border-top: 2px solid var(--primary);
   border-radius: 50%;
-  animation: spin 1s ease-in-out infinite;
-  box-shadow: 0 0 10px rgba(37, 99, 235, 0.2);
+  animation: spin 1s linear infinite;
 }
 
 @keyframes spin {
@@ -268,64 +200,22 @@ h2 {
   to { transform: rotate(360deg); }
 }
 
-/* New animations */
-@keyframes fadeInUp {
-  from {
-    opacity: 0;
-    transform: translateY(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateY(0);
-  }
+/* Simple fade animation */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
 }
 
-@keyframes fadeInScale {
-  from {
-    opacity: 0;
-    transform: scale(0.95);
-  }
-  to {
-    opacity: 1;
-    transform: scale(1);
-  }
+.animate-fade-in {
+  animation: fadeIn 0.3s ease-out;
 }
 
-@keyframes pulse {
-  0%, 100% {
-    transform: scale(1);
-  }
-  50% {
-    transform: scale(1.05);
-  }
-}
-
-@keyframes slideInRight {
-  from {
-    opacity: 0;
-    transform: translateX(20px);
-  }
-  to {
-    opacity: 1;
-    transform: translateX(0);
-  }
-}
-
-/* Utility animation classes */
 .animate-fade-in-up {
-  animation: fadeInUp 0.6s ease-out forwards;
+  animation: fadeIn 0.3s ease-out;
 }
 
 .animate-fade-in-scale {
-  animation: fadeInScale 0.4s ease-out forwards;
-}
-
-.animate-pulse-slow {
-  animation: pulse 2s ease-in-out infinite;
-}
-
-.animate-slide-in-right {
-  animation: slideInRight 0.5s ease-out forwards;
+  animation: fadeIn 0.3s ease-out;
 }
 
 /* Modern scrollbar */
