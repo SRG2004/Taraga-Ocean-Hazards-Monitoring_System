@@ -1,5 +1,5 @@
 run = "npm run dev"
-modules = ["nodejs-20", "web"]
+modules = ["nodejs-20", "web", "java-graalvm22.3"]
 hidden = [".config", "package-lock.json"]
 entrypoint = "index.html"
 
