@@ -11,6 +11,7 @@ import { ReportHazardForm } from './components/ReportHazardForm.jsx';
 import { SettingsPage } from './components/SettingsPage.jsx';
 import { DonationsInterface } from './components/DonationsInterface.jsx';
 import { SocialMediaMonitoring } from './components/SocialMediaMonitoring.jsx';
+import { Waves, LayoutDashboard, PlusCircle, Map, Heart, BarChart3, Rss, FileText, Siren, Users, Box, Settings } from 'lucide-react';
 import './styles/globals.css';
 
 // Modern futuristic dashboard component
@@ -18,26 +19,26 @@ const FuturisticDashboard = ({ user, onLogout }) => {
   const [currentView, setCurrentView] = React.useState(`${user.role}-dashboard`);
 
   return (
-    <div className="min-h-screen relative">
+    <div className="min-h-screen bg-background text-foreground">
 
       {/* Header */}
-      <header className="bg-white border-b border-gray-200">
+      <header className="bg-white border-b border-border">
         <div className="max-w-7xl mx-auto px-6 py-4">
           <div className="flex items-center justify-between">
             <div className="flex items-center space-x-3">
-              <div className="w-10 h-10 bg-blue-600 rounded-lg flex items-center justify-center">
-                <span className="text-white font-bold text-lg">🌊</span>
+              <div className="w-10 h-10 bg-primary rounded-lg flex items-center justify-center">
+                <Waves className="text-primary-foreground" />
               </div>
               <div>
-                <h1 className="text-xl font-bold text-gray-900">Taranga Ocean Monitor</h1>
-                <p className="text-sm text-gray-600">Advanced Hazard Detection System</p>
+                <h1 className="text-xl font-medium text-foreground">Taranga Ocean Monitor</h1>
+                <p className="text-sm text-muted-foreground">Advanced Hazard Detection System</p>
               </div>
             </div>
             
             <div className="flex items-center space-x-4">
               <div className="text-right">
-                <p className="text-sm font-medium text-gray-900">{user.fullName}</p>
-                <p className="text-xs text-blue-600 uppercase tracking-wide">{user.role}</p>
+                <p className="text-sm font-medium text-foreground">{user.fullName}</p>
+                <p className={`text-xs text-muted-foreground uppercase tracking-wide`}>{user.role}</p>
               </div>
               <button
                 onClick={onLogout}
@@ -52,53 +53,53 @@ const FuturisticDashboard = ({ user, onLogout }) => {
 
       <div className="relative z-10 flex min-h-screen">
         {/* Sidebar */}
-        <nav className="w-64 md:w-72 lg:w-80 bg-white border-r border-gray-200 p-4 sm:p-6 flex-shrink-0">
-          <div className="space-y-1 sm:space-y-2">
+        <nav className="w-64 md:w-72 lg:w-80 bg-white border-r border-border p-4 sm:p-6 flex-shrink-0">
+          <div className="space-y-2">
             <NavButton 
               active={currentView === `${user.role}-dashboard`}
               onClick={() => setCurrentView(`${user.role}-dashboard`)}
-              icon="🏠"
+              icon={<LayoutDashboard />}
               label="Dashboard"
             />
             
             {user.role === 'citizen' && (
               <>
-                <NavButton onClick={() => setCurrentView('report-hazard')} icon="📝" label="Report Hazard" />
-                <NavButton onClick={() => setCurrentView('hazard-map')} icon="🗺️" label="Hazard Map" />
-                <NavButton onClick={() => setCurrentView('donations')} icon="💰" label="Donate" />
+                <NavButton onClick={() => setCurrentView('report-hazard')} icon={<PlusCircle />} label="Report Hazard" />
+                <NavButton onClick={() => setCurrentView('hazard-map')} icon={<Map />} label="Hazard Map" />
+                <NavButton onClick={() => setCurrentView('donations')} icon={<Heart />} label="Donate" />
               </>
             )}
             
             {user.role === 'analyst' && (
               <>
-                <NavButton onClick={() => setCurrentView('analytics')} icon="📊" label="Analytics" />
-                <NavButton onClick={() => setCurrentView('social-media')} icon="📱" label="Social Media" />
-                <NavButton onClick={() => setCurrentView('reports')} icon="📋" label="Reports" />
+                <NavButton onClick={() => setCurrentView('analytics')} icon={<BarChart3 />} label="Analytics" />
+                <NavButton onClick={() => setCurrentView('social-media')} icon={<Rss />} label="Social Media" />
+                <NavButton onClick={() => setCurrentView('reports')} icon={<FileText />} label="Reports" />
               </>
             )}
             
             {user.role === 'official' && (
               <>
-                <NavButton onClick={() => setCurrentView('emergency')} icon="🚨" label="Emergency Response" />
-                <NavButton onClick={() => setCurrentView('volunteers')} icon="👥" label="Volunteers" />
-                <NavButton onClick={() => setCurrentView('resources')} icon="📦" label="Resources" />
+                <NavButton onClick={() => setCurrentView('emergency')} icon={<Siren />} label="Emergency Response" />
+                <NavButton onClick={() => setCurrentView('volunteers')} icon={<Users />} label="Volunteers" />
+                <NavButton onClick={() => setCurrentView('resources')} icon={<Box />} label="Resources" />
               </>
             )}
             
             {(user.role === 'admin' || user.role === 'Admin') && (
               <>
-                <NavButton onClick={() => setCurrentView('system-admin')} icon="⚙️" label="System Admin" />
-                <NavButton onClick={() => setCurrentView('user-management')} icon="👤" label="Users" />
-                <NavButton onClick={() => setCurrentView('analytics')} icon="📊" label="Analytics" />
+                <NavButton onClick={() => setCurrentView('system-admin')} icon={<Settings />} label="System Admin" />
+                <NavButton onClick={() => setCurrentView('user-management')} icon={<Users />} label="Users" />
+                <NavButton onClick={() => setCurrentView('analytics')} icon={<BarChart3 />} label="Analytics" />
               </>
             )}
             
-            <NavButton onClick={() => setCurrentView('settings')} icon="⚙️" label="Settings" />
+            <NavButton onClick={() => setCurrentView('settings')} icon={<Settings />} label="Settings" />
           </div>
         </nav>
 
         {/* Main Content */}
-        <main className="flex-1 bg-gray-50 overflow-x-auto">
+        <main className="flex-1 bg-muted/50 overflow-x-auto">
           <div className="min-h-screen w-full p-4 sm:p-6 lg:p-8">
             <div className="max-w-full">
               <DashboardContent currentView={currentView} user={user} />
@@ -114,14 +115,14 @@ const FuturisticDashboard = ({ user, onLogout }) => {
 const NavButton = ({ active, onClick, icon, label }) => (
   <button
     onClick={onClick}
-    className={`w-full flex items-center space-x-2 sm:space-x-3 px-3 sm:px-4 py-2 sm:py-3 rounded-lg transition-all duration-200 text-left ${
+    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 text-left ${
       active 
-        ? 'bg-blue-50 border border-blue-200 text-blue-700' 
-        : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900'
+        ? 'bg-accent text-primary' 
+        : 'text-muted-foreground hover:bg-accent/50 hover:text-foreground'
     }`}
   >
-    <span className="text-base sm:text-lg flex-shrink-0">{icon}</span>
-    <span className="font-medium text-sm sm:text-base truncate">{label}</span>
+    <div className="h-5 w-5">{icon}</div>
+    <span className="font-medium text-base truncate">{label}</span>
   </button>
 );
 
@@ -147,9 +148,9 @@ const DashboardContent = ({ currentView, user }) => {
   // Specific views based on user role and currentView
   if (currentView === 'hazard-map') {
     return (
-      <div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-6">Interactive Hazard Map</h2>
-        <p className="text-gray-600 mb-4">Real-time visualization of ocean hazards across India's coastline.</p>
+      <div className="bg-white border border-border rounded-lg p-6">
+        <h2 className="text-2xl font-medium text-foreground mb-2">Interactive Hazard Map</h2>
+        <p className="text-muted-foreground mb-4">Real-time visualization of ocean hazards across India's coastline.</p>
         <MinimalHazardMap height="600px" />
       </div>
     );
@@ -173,18 +174,18 @@ const DashboardContent = ({ currentView, user }) => {
 
   return (
     <div>
-      <div className="card text-center py-12">
+      <div className="bg-white border border-border rounded-lg p-6 text-center py-12">
         <div className="text-6xl mb-4">🚧</div>
-        <h2 className="text-2xl font-bold text-gray-900 mb-4">
+        <h2 className="text-2xl font-medium text-foreground mb-4">
           {currentView.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
         </h2>
-        <p className="text-gray-600 mb-6">This feature is being developed with advanced capabilities.</p>
+        <p className="text-muted-foreground mb-6">This feature is being developed with advanced capabilities.</p>
         <div className="text-left max-w-md mx-auto">
-          <h4 className="text-lg font-semibold text-blue-600 mb-3">Coming Soon:</h4>
-          <ul className="space-y-2 text-gray-700">
+          <h4 className="text-lg font-medium text-primary mb-3">Coming Soon:</h4>
+          <ul className="space-y-2 text-foreground">
             {getFeatureList(currentView).map((feature, i) => (
               <li key={i} className="flex items-center space-x-2">
-                <span className="text-blue-600">•</span>
+                <span className="text-primary">•</span>
                 <span>{feature}</span>
               </li>
             ))}
@@ -234,10 +235,10 @@ const App = () => {
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
+      <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">
           <div className="loading mb-4"></div>
-          <p className="text-slate-400">Initializing Taranga System...</p>
+          <p className="text-muted-foreground">Initializing Taranga System...</p>
         </div>
       </div>
     );
@@ -251,7 +252,7 @@ const App = () => {
           toastOptions={{
             duration: 4000,
             style: {
-              background: 'var(--background-card)',
+              background: 'var(--background)',
               color: 'var(--foreground)',
               border: '1px solid var(--border)',
               borderRadius: 'var(--radius)',
