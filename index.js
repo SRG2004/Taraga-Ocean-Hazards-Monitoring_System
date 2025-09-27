@@ -16,6 +16,6 @@ app.use(bodyParser.json());
 
 app.use('/api/auth', authRoutes);
 
-app.listen(port, () => {
-  console.log(`✅ Backend server is running in mock mode on port: ${port}`);
+app.listen(port, 'localhost', () => {
+  console.log(`✅ Backend server is running in mock mode on localhost:${port}`);
 });
