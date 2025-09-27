@@ -13,6 +13,7 @@ language = "nodejs"
 deploymentTarget = "autoscale"
 build = ["npm", "run", "build"]
 publicDir = "dist"
+run = ["npm", "start"]
 
 [[ports]]
 localPort = 3001
