@@ -10,6 +10,7 @@ import compression from 'compression';
 import morgan from 'morgan';
 import rateLimit from 'express-rate-limit';
 import dotenv from 'dotenv';
+import path from 'path';
 
 // Load environment variables
 dotenv.config();
@@ -47,6 +48,10 @@ const limiter = rateLimit({
 });
 app.use('/api', limiter);
 
+// Serve static files from the React app
+const __dirname = path.resolve();
+app.use(express.static(path.join(__dirname, 'dist')));
+
 
 /**
  * --- API ROUTES ---
@@ -70,6 +75,13 @@ app.get('/api/health', (req, res) => {
     timestamp: new Date().toISOString(),
   });
 });
+
+// The "catchall" handler: for any request that doesn't
+// match one above, send back React's index.html file.
+app.get('*', (req, res) => {
+  res.sendFile(path.join(__dirname, 'dist', 'index.html'));
+});
+
 
 /**
  * --- ERROR HANDLING ---
