@@ -1,18 +1,296 @@
-
 import React from 'react';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import { BrowserRouter as Router, Routes, Route, Navigate } from 'react-router-dom';
 import { Toaster } from 'react-hot-toast';
-import './App.css';
+import SimpleLoginPage from './pages/SimpleLoginPage';
+import './styles/globals.css';
 
-// Login component with real functionality
-const LoginApp: React.FC = () => {
-  const [email, setEmail] = React.useState('');
-  const [password, setPassword] = React.useState('');
-  const [isLoading, setIsLoading] = React.useState(false);
+// Modern futuristic dashboard component
+const FuturisticDashboard: React.FC<{ user: any; onLogout: () => void }> = ({ user, onLogout }) => {
+  const [currentView, setCurrentView] = React.useState(`${user.role}-dashboard`);
+
+  return (
+    <div className="min-h-screen relative">
+      {/* Animated particles background */}
+      <div className="fixed inset-0 z-0">
+        <div className="absolute inset-0 bg-gradient-to-br from-slate-900 via-blue-900/20 to-slate-900"></div>
+        <div className="absolute inset-0">
+          {[...Array(20)].map((_, i) => (
+            <div
+              key={i}
+              className="absolute w-1 h-1 bg-cyan-400 rounded-full animate-pulse"
+              style={{
+                left: `${Math.random() * 100}%`,
+                top: `${Math.random() * 100}%`,
+                animationDelay: `${Math.random() * 2}s`,
+                animationDuration: `${2 + Math.random() * 3}s`,
+              }}
+            />
+          ))}
+        </div>
+      </div>
+
+      {/* Header */}
+      <header className="relative z-10 glass border-b border-white/10">
+        <div className="max-w-7xl mx-auto px-6 py-4">
+          <div className="flex items-center justify-between">
+            <div className="flex items-center space-x-3">
+              <div className="w-10 h-10 bg-gradient-to-r from-cyan-500 to-blue-500 rounded-full flex items-center justify-center">
+                <span className="text-white font-bold text-lg">🌊</span>
+              </div>
+              <div>
+                <h1 className="text-xl font-bold text-gradient">Taranga Ocean Monitor</h1>
+                <p className="text-sm text-slate-400">Advanced Hazard Detection System</p>
+              </div>
+            </div>
+            
+            <div className="flex items-center space-x-4">
+              <div className="text-right">
+                <p className="text-sm font-medium text-white">{user.fullName}</p>
+                <p className="text-xs text-cyan-400 uppercase tracking-wide">{user.role}</p>
+              </div>
+              <button
+                onClick={onLogout}
+                className="btn-glass px-4 py-2 text-sm font-medium hover:bg-red-500/20 hover:border-red-500/50"
+              >
+                Logout
+              </button>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <div className="relative z-10 flex min-h-screen">
+        {/* Sidebar */}
+        <nav className="w-64 glass border-r border-white/10 p-6">
+          <div className="space-y-2">
+            <NavButton 
+              active={currentView === `${user.role}-dashboard`}
+              onClick={() => setCurrentView(`${user.role}-dashboard`)}
+              icon="🏠"
+              label="Dashboard"
+            />
+            
+            {user.role === 'citizen' && (
+              <>
+                <NavButton onClick={() => setCurrentView('report-hazard')} icon="📝" label="Report Hazard" />
+                <NavButton onClick={() => setCurrentView('hazard-map')} icon="🗺️" label="Hazard Map" />
+                <NavButton onClick={() => setCurrentView('donations')} icon="💰" label="Donate" />
+              </>
+            )}
+            
+            {user.role === 'analyst' && (
+              <>
+                <NavButton onClick={() => setCurrentView('analytics')} icon="📊" label="Analytics" />
+                <NavButton onClick={() => setCurrentView('social-media')} icon="📱" label="Social Media" />
+                <NavButton onClick={() => setCurrentView('reports')} icon="📋" label="Reports" />
+              </>
+            )}
+            
+            {user.role === 'official' && (
+              <>
+                <NavButton onClick={() => setCurrentView('emergency')} icon="🚨" label="Emergency Response" />
+                <NavButton onClick={() => setCurrentView('volunteers')} icon="👥" label="Volunteers" />
+                <NavButton onClick={() => setCurrentView('resources')} icon="📦" label="Resources" />
+              </>
+            )}
+            
+            {(user.role === 'admin' || user.role === 'Admin') && (
+              <>
+                <NavButton onClick={() => setCurrentView('system-admin')} icon="⚙️" label="System Admin" />
+                <NavButton onClick={() => setCurrentView('user-management')} icon="👤" label="Users" />
+                <NavButton onClick={() => setCurrentView('analytics')} icon="📊" label="Analytics" />
+              </>
+            )}
+            
+            <NavButton onClick={() => setCurrentView('settings')} icon="⚙️" label="Settings" />
+          </div>
+        </nav>
+
+        {/* Main Content */}
+        <main className="flex-1 p-6">
+          <div className="max-w-6xl mx-auto">
+            <DashboardContent currentView={currentView} user={user} />
+          </div>
+        </main>
+      </div>
+    </div>
+  );
+};
+
+// Navigation Button Component
+const NavButton: React.FC<{ active?: boolean; onClick: () => void; icon: string; label: string }> = ({ active, onClick, icon, label }) => (
+  <button
+    onClick={onClick}
+    className={`w-full flex items-center space-x-3 px-4 py-3 rounded-lg transition-all duration-200 ${
+      active 
+        ? 'bg-gradient-to-r from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 text-cyan-300' 
+        : 'text-slate-300 hover:bg-white/5 hover:text-white'
+    }`}
+  >
+    <span className="text-lg">{icon}</span>
+    <span className="font-medium">{label}</span>
+  </button>
+);
+
+// Dashboard Content Component
+const DashboardContent: React.FC<{ currentView: string; user: any }> = ({ currentView, user }) => {
+  if (currentView === `${user.role}-dashboard`) {
+    return (
+      <div className="animate-fade-in-up">
+        <div className="mb-8">
+          <h2 className="text-3xl font-bold text-white mb-2">Welcome back, {user.fullName}!</h2>
+          <p className="text-slate-400">Your {user.role} dashboard is ready for action.</p>
+        </div>
+
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
+          <StatCard 
+            title="Active Alerts" 
+            value="12" 
+            icon="🚨" 
+            trend="+2 from yesterday"
+            color="text-red-400"
+          />
+          <StatCard 
+            title="Reports Today" 
+            value="47" 
+            icon="📊" 
+            trend="+15% from last week"
+            color="text-cyan-400"
+          />
+          <StatCard 
+            title="System Status" 
+            value="Operational" 
+            icon="✅" 
+            trend="All systems green"
+            color="text-green-400"
+          />
+        </div>
+
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
+          <div className="glass-card">
+            <h3 className="text-xl font-semibold text-white mb-4">Recent Activity</h3>
+            <div className="space-y-3">
+              {[
+                { time: '2 min ago', event: 'New hazard report submitted', type: 'info' },
+                { time: '15 min ago', event: 'Alert sent to coastal regions', type: 'warning' },
+                { time: '1 hour ago', event: 'System backup completed', type: 'success' },
+              ].map((item, i) => (
+                <div key={i} className="flex items-center space-x-3 p-3 rounded-lg bg-white/5">
+                  <div className={`w-2 h-2 rounded-full ${
+                    item.type === 'info' ? 'bg-blue-400' : 
+                    item.type === 'warning' ? 'bg-yellow-400' : 'bg-green-400'
+                  }`} />
+                  <div className="flex-1">
+                    <p className="text-white text-sm">{item.event}</p>
+                    <p className="text-slate-400 text-xs">{item.time}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="glass-card">
+            <h3 className="text-xl font-semibold text-white mb-4">Quick Actions</h3>
+            <div className="grid grid-cols-2 gap-3">
+              {user.role === 'citizen' && (
+                <>
+                  <ActionButton icon="📝" label="Report Hazard" />
+                  <ActionButton icon="🗺️" label="View Map" />
+                  <ActionButton icon="💰" label="Donate" />
+                  <ActionButton icon="👥" label="Volunteer" />
+                </>
+              )}
+              {user.role === 'analyst' && (
+                <>
+                  <ActionButton icon="📊" label="Generate Report" />
+                  <ActionButton icon="📱" label="Monitor Social" />
+                  <ActionButton icon="🔍" label="Analyze Data" />
+                  <ActionButton icon="📈" label="View Trends" />
+                </>
+              )}
+              {user.role === 'official' && (
+                <>
+                  <ActionButton icon="🚨" label="Create Alert" />
+                  <ActionButton icon="📞" label="Contact Teams" />
+                  <ActionButton icon="📦" label="Deploy Resources" />
+                  <ActionButton icon="📋" label="Review Reports" />
+                </>
+              )}
+              {(user.role === 'admin' || user.role === 'Admin') && (
+                <>
+                  <ActionButton icon="⚙️" label="System Config" />
+                  <ActionButton icon="👤" label="Manage Users" />
+                  <ActionButton icon="🛡️" label="Security" />
+                  <ActionButton icon="📊" label="Analytics" />
+                </>
+              )}
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
+
+  return (
+    <div className="animate-fade-in-up">
+      <div className="glass-card text-center py-12">
+        <div className="text-6xl mb-4">🚧</div>
+        <h2 className="text-2xl font-bold text-white mb-4">
+          {currentView.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}
+        </h2>
+        <p className="text-slate-400 mb-6">This feature is being developed with advanced capabilities.</p>
+        <div className="text-left max-w-md mx-auto">
+          <h4 className="text-lg font-semibold text-cyan-400 mb-3">Coming Soon:</h4>
+          <ul className="space-y-2 text-slate-300">
+            {getFeatureList(currentView).map((feature, i) => (
+              <li key={i} className="flex items-center space-x-2">
+                <span className="text-cyan-400">•</span>
+                <span>{feature}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      </div>
+    </div>
+  );
+};
+
+// Utility components
+const StatCard: React.FC<{ title: string; value: string; icon: string; trend: string; color: string }> = ({ title, value, icon, trend, color }) => (
+  <div className="glass-card card-hover">
+    <div className="flex items-center justify-between mb-4">
+      <h3 className="text-slate-300 font-medium">{title}</h3>
+      <span className="text-2xl">{icon}</span>
+    </div>
+    <div className={`text-3xl font-bold mb-2 ${color}`}>{value}</div>
+    <p className="text-slate-400 text-sm">{trend}</p>
+  </div>
+);
+
+const ActionButton: React.FC<{ icon: string; label: string }> = ({ icon, label }) => (
+  <button className="btn-glass p-4 flex flex-col items-center space-y-2 hover:scale-105 transition-transform">
+    <span className="text-2xl">{icon}</span>
+    <span className="text-sm font-medium">{label}</span>
+  </button>
+);
+
+const getFeatureList = (view: string) => {
+  const features: Record<string, string[]> = {
+    'report-hazard': ['Real-time GPS location', 'Photo/video uploads', 'AI-powered categorization'],
+    'hazard-map': ['Interactive 3D visualization', 'Real-time updates', 'Predictive modeling'],
+    'analytics': ['Advanced data visualization', 'Machine learning insights', 'Custom reports'],
+    'social-media': ['Sentiment analysis', 'Real-time monitoring', 'Automated alerts'],
+    'emergency': ['Automated response protocols', 'Resource optimization', 'Team coordination'],
+    'volunteers': ['Skill-based matching', 'Real-time tracking', 'Performance analytics'],
+  };
+  return features[view] || ['Enhanced functionality', 'Real-time updates', 'Advanced analytics'];
+};
+
+// Main App Component
+const App: React.FC = () => {
   const [user, setUser] = React.useState<any>(null);
-  const [currentView, setCurrentView] = React.useState<string>('login');
+  const [isLoading, setIsLoading] = React.useState(true);
 
-  // Check for existing session on mount
   React.useEffect(() => {
     const storedUser = localStorage.getItem('user');
     const storedToken = localStorage.getItem('token');
@@ -20,314 +298,70 @@ const LoginApp: React.FC = () => {
       try {
         const userData = JSON.parse(storedUser);
         setUser(userData);
-        setCurrentView(`${userData.role}-dashboard`);
       } catch (error) {
         localStorage.clear();
       }
     }
+    setIsLoading(false);
   }, []);
-
-  const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsLoading(true);
-
-    try {
-      const response = await fetch('/api/auth/login', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ email, password })
-      });
-
-      if (response.ok) {
-        const data = await response.json();
-        setUser(data.user);
-        localStorage.setItem('user', JSON.stringify(data.user));
-        localStorage.setItem('token', data.token);
-        
-        // Redirect to role-specific dashboard
-        setCurrentView(`${data.user.role}-dashboard`);
-        alert(`Welcome ${data.user.fullName}!`);
-      } else {
-        const error = await response.json();
-        alert(`Login failed: ${error.error || 'Invalid credentials'}`);
-      }
-    } catch (error) {
-      alert('Login failed: Network error');
-    } finally {
-      setIsLoading(false);
-    }
-  };
-
-  const handleDemoLogin = (demoEmail: string) => {
-    setEmail(demoEmail);
-    setPassword('demo123');
-  };
 
   const handleLogout = () => {
     setUser(null);
     localStorage.clear();
-    setCurrentView('login');
   };
 
-  const handleNavigation = (view: string) => {
-    setCurrentView(view);
-  };
-
-  // Render different views based on currentView
-  if (currentView !== 'login' && user) {
+  if (isLoading) {
     return (
-      <div style={{ padding: '20px', fontFamily: 'Arial', minHeight: '100vh', backgroundColor: '#f8fafc' }}>
-        <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: '20px', padding: '0 0 20px 0', borderBottom: '2px solid #e2e8f0' }}>
-          <h1>🌊 Taranga Ocean Hazard Monitor</h1>
-          <div style={{ display: 'flex', gap: '10px', alignItems: 'center' }}>
-            <span style={{ fontSize: '14px', color: '#64748b' }}>Welcome, {user.fullName}</span>
-            <button 
-              onClick={handleLogout}
-              style={{ padding: '8px 16px', backgroundColor: '#dc2626', color: 'white', border: 'none', borderRadius: '6px', cursor: 'pointer', fontSize: '14px' }}
-            >
-              Logout
-            </button>
-          </div>
-        </div>
-        
-        <div style={{ display: 'flex', gap: '20px' }}>
-          {/* Navigation Sidebar */}
-          <div style={{ width: '240px', backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)', height: 'fit-content' }}>
-            <h3 style={{ marginTop: '0', marginBottom: '15px', color: '#1e293b' }}>{user.role.charAt(0).toUpperCase() + user.role.slice(1)} Dashboard</h3>
-            
-            {/* Common Navigation */}
-            <div style={{ marginBottom: '20px' }}>
-              <button 
-                onClick={() => handleNavigation(`${user.role}-dashboard`)}
-                style={{ 
-                  width: '100%', 
-                  padding: '10px', 
-                  marginBottom: '8px', 
-                  backgroundColor: currentView === `${user.role}-dashboard` ? '#3b82f6' : '#f1f5f9',
-                  color: currentView === `${user.role}-dashboard` ? 'white' : '#64748b',
-                  border: 'none', 
-                  borderRadius: '4px', 
-                  cursor: 'pointer',
-                  textAlign: 'left'
-                }}
-              >
-                🏠 Dashboard Home
-              </button>
-              
-              {/* Role-specific navigation */}
-              {user.role === 'citizen' && (
-                <>
-                  <button onClick={() => handleNavigation('report-hazard')} style={{ width: '100%', padding: '10px', marginBottom: '8px', backgroundColor: currentView === 'report-hazard' ? '#3b82f6' : '#f1f5f9', color: currentView === 'report-hazard' ? 'white' : '#64748b', border: 'none', borderRadius: '4px', cursor: 'pointer', textAlign: 'left' }}>
-                    📝 Report Hazard
-                  </button>
-                  <button onClick={() => handleNavigation('hazard-map')} style={{ width: '100%', padding: '10px', marginBottom: '8px', backgroundColor: currentView === 'hazard-map' ? '#3b82f6' : '#f1f5f9', color: currentView === 'hazard-map' ? 'white' : '#64748b', border: 'none', borderRadius: '4px', cursor: 'pointer', textAlign: 'left' }}>
-                    🗺️ Hazard Map
-                  </button>
-                  <button onClick={() => handleNavigation('donations')} style={{ width: '100%', padding: '10px', marginBottom: '8px', backgroundColor: currentView === 'donations' ? '#3b82f6' : '#f1f5f9', color: currentView === 'donations' ? 'white' : '#64748b', border: 'none', borderRadius: '4px', cursor: 'pointer', textAlign: 'left' }}>
-                    💰 Donate
-                  </button>
-                </>
-              )}
-              
-              {user.role === 'analyst' && (
-                <>
-                  <button onClick={() => handleNavigation('analytics')} style={{ width: '100%', padding: '10px', marginBottom: '8px', backgroundColor: currentView === 'analytics' ? '#3b82f6' : '#f1f5f9', color: currentView === 'analytics' ? 'white' : '#64748b', border: 'none', borderRadius: '4px', cursor: 'pointer', textAlign: 'left' }}>
-                    📊 Analytics
-                  </button>
-                  <button onClick={() => handleNavigation('social-media')} style={{ width: '100%', padding: '10px', marginBottom: '8px', backgroundColor: currentView === 'social-media' ? '#3b82f6' : '#f1f5f9', color: currentView === 'social-media' ? 'white' : '#64748b', border: 'none', borderRadius: '4px', cursor: 'pointer', textAlign: 'left' }}>
-                    📱 Social Media
-                  </button>
-                </>
-              )}
-              
-              {user.role === 'official' && (
-                <>
-                  <button onClick={() => handleNavigation('emergency')} style={{ width: '100%', padding: '10px', marginBottom: '8px', backgroundColor: currentView === 'emergency' ? '#3b82f6' : '#f1f5f9', color: currentView === 'emergency' ? 'white' : '#64748b', border: 'none', borderRadius: '4px', cursor: 'pointer', textAlign: 'left' }}>
-                    🚨 Emergency Response
-                  </button>
-                  <button onClick={() => handleNavigation('volunteers')} style={{ width: '100%', padding: '10px', marginBottom: '8px', backgroundColor: currentView === 'volunteers' ? '#3b82f6' : '#f1f5f9', color: currentView === 'volunteers' ? 'white' : '#64748b', border: 'none', borderRadius: '4px', cursor: 'pointer', textAlign: 'left' }}>
-                    👥 Volunteers
-                  </button>
-                  <button onClick={() => handleNavigation('donation-management')} style={{ width: '100%', padding: '10px', marginBottom: '8px', backgroundColor: currentView === 'donation-management' ? '#3b82f6' : '#f1f5f9', color: currentView === 'donation-management' ? 'white' : '#64748b', border: 'none', borderRadius: '4px', cursor: 'pointer', textAlign: 'left' }}>
-                    💰 Manage Donations
-                  </button>
-                </>
-              )}
-              
-              {(user.role === 'admin' || user.role === 'Admin') && (
-                <>
-                  <button onClick={() => handleNavigation('system-admin')} style={{ width: '100%', padding: '10px', marginBottom: '8px', backgroundColor: currentView === 'system-admin' ? '#3b82f6' : '#f1f5f9', color: currentView === 'system-admin' ? 'white' : '#64748b', border: 'none', borderRadius: '4px', cursor: 'pointer', textAlign: 'left' }}>
-                    ⚙️ System Admin
-                  </button>
-                  <button onClick={() => handleNavigation('user-management')} style={{ width: '100%', padding: '10px', marginBottom: '8px', backgroundColor: currentView === 'user-management' ? '#3b82f6' : '#f1f5f9', color: currentView === 'user-management' ? 'white' : '#64748b', border: 'none', borderRadius: '4px', cursor: 'pointer', textAlign: 'left' }}>
-                    👤 Users
-                  </button>
-                </>
-              )}
-              
-              <button onClick={() => handleNavigation('settings')} style={{ width: '100%', padding: '10px', marginBottom: '8px', backgroundColor: currentView === 'settings' ? '#3b82f6' : '#f1f5f9', color: currentView === 'settings' ? 'white' : '#64748b', border: 'none', borderRadius: '4px', cursor: 'pointer', textAlign: 'left' }}>
-                ⚙️ Settings
-              </button>
-            </div>
-          </div>
-          
-          {/* Main Content */}
-          <div style={{ flex: 1, backgroundColor: 'white', padding: '20px', borderRadius: '8px', boxShadow: '0 1px 3px rgba(0,0,0,0.1)' }}>
-            {currentView === `${user.role}-dashboard` && (
-              <div>
-                <h2>Welcome to your {user.role} dashboard!</h2>
-                <p style={{ color: '#64748b', marginBottom: '20px' }}>Use the navigation on the left to access different features.</p>
-                
-                <div style={{ display: 'grid', gridTemplateColumns: 'repeat(auto-fit, minmax(300px, 1fr))', gap: '16px' }}>
-                  <div style={{ padding: '20px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                    <h3>🌊 Ocean Hazard Monitoring</h3>
-                    <p>Real-time monitoring and reporting platform for India's coastal regions.</p>
-                  </div>
-                  <div style={{ padding: '20px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                    <h3>📊 Current Status</h3>
-                    <p>System is operational. {user.role === 'citizen' ? 'Ready to receive reports.' : user.role === 'analyst' ? 'Analytics running.' : user.role === 'official' ? 'Emergency systems active.' : 'All systems monitored.'}</p>
-                  </div>
-                </div>
-              </div>
-            )}
-            
-            {currentView !== `${user.role}-dashboard` && (
-              <div>
-                <h2>{currentView.replace('-', ' ').replace(/\b\w/g, l => l.toUpperCase())}</h2>
-                <p style={{ color: '#64748b', marginBottom: '20px' }}>
-                  This feature is being developed. The full functionality will be available soon.
-                </p>
-                <div style={{ padding: '20px', backgroundColor: '#f8fafc', borderRadius: '8px', border: '1px solid #e2e8f0' }}>
-                  <h3>🚧 Under Development</h3>
-                  <p>This {currentView.replace('-', ' ')} feature is being built with the following capabilities:</p>
-                  <ul style={{ marginTop: '10px', paddingLeft: '20px' }}>
-                    {currentView === 'report-hazard' && (
-                      <>
-                        <li>Real-time hazard reporting with GPS location</li>
-                        <li>Photo and video upload capability</li>
-                        <li>Automated alert distribution</li>
-                      </>
-                    )}
-                    {currentView === 'hazard-map' && (
-                      <>
-                        <li>Interactive map with hazard markers</li>
-                        <li>Real-time updates and filtering</li>
-                        <li>Historical data visualization</li>
-                      </>
-                    )}
-                    {currentView === 'analytics' && (
-                      <>
-                        <li>Comprehensive data analysis dashboard</li>
-                        <li>Trend analysis and predictions</li>
-                        <li>Custom report generation</li>
-                      </>
-                    )}
-                    {(currentView === 'social-media' || currentView === 'social_media') && (
-                      <>
-                        <li>Social media sentiment analysis</li>
-                        <li>Real-time monitoring of platforms</li>
-                        <li>Automated alert detection</li>
-                      </>
-                    )}
-                    {currentView === 'donations' && (
-                      <>
-                        <li>Secure payment processing</li>
-                        <li>Campaign management</li>
-                        <li>Donor recognition system</li>
-                      </>
-                    )}
-                    {currentView === 'volunteers' && (
-                      <>
-                        <li>Volunteer registration and management</li>
-                        <li>Task assignment and tracking</li>
-                        <li>Communication tools</li>
-                      </>
-                    )}
-                  </ul>
-                </div>
-              </div>
-            )}
-          </div>
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-center">
+          <div className="loading mb-4"></div>
+          <p className="text-slate-400">Initializing Taranga System...</p>
         </div>
       </div>
     );
   }
 
-  // Login form
   return (
-    <div style={{ padding: '20px', fontFamily: 'Arial' }}>
-      <h1>🌊 Taranga Ocean Hazard Monitor</h1>
-      <p>Ocean Hazard Monitoring and Reporting Platform for India's Coastal Regions</p>
-      
-      <div style={{ marginTop: '20px', padding: '15px', backgroundColor: '#e3f2fd', borderRadius: '8px', maxWidth: '500px' }}>
-        <h2>Welcome to the Login Page</h2>
-        <form onSubmit={handleLogin} style={{ marginTop: '10px' }}>
-          <div style={{ marginBottom: '10px' }}>
-            <label>Email:</label><br />
-            <input 
-              type="email" 
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              required
-              style={{ padding: '8px', width: '300px', marginTop: '5px' }} 
-            />
-          </div>
-          <div style={{ marginBottom: '10px' }}>
-            <label>Password:</label><br />
-            <input 
-              type="password" 
-              value={password}
-              onChange={(e) => setPassword(e.target.value)}
-              required
-              style={{ padding: '8px', width: '300px', marginTop: '5px' }} 
-            />
-          </div>
-          <button 
-            type="submit" 
-            disabled={isLoading}
-            style={{ 
-              padding: '10px 20px', 
-              backgroundColor: isLoading ? '#ccc' : '#1976d2', 
-              color: 'white', 
-              border: 'none', 
-              borderRadius: '4px', 
-              cursor: isLoading ? 'not-allowed' : 'pointer' 
-            }}
-          >
-            {isLoading ? 'Logging in...' : 'Login'}
-          </button>
-        </form>
-        
-        <div style={{ marginTop: '20px' }}>
-          <h3>Demo Accounts (Click to Use):</h3>
-          <div style={{ display: 'flex', flexDirection: 'column', gap: '8px' }}>
-            <button onClick={() => handleDemoLogin('admin@oceanhazard.com')} style={{ padding: '8px', textAlign: 'left', backgroundColor: '#fff3e0', border: '1px solid #ffb74d', borderRadius: '4px', cursor: 'pointer' }}>
-              👨‍💼 Admin: admin@oceanhazard.com
-            </button>
-            <button onClick={() => handleDemoLogin('analyst@oceanhazard.com')} style={{ padding: '8px', textAlign: 'left', backgroundColor: '#f3e5f5', border: '1px solid #ba68c8', borderRadius: '4px', cursor: 'pointer' }}>
-              📊 Analyst: analyst@oceanhazard.com
-            </button>
-            <button onClick={() => handleDemoLogin('official@oceanhazard.com')} style={{ padding: '8px', textAlign: 'left', backgroundColor: '#e8f5e8', border: '1px solid #81c784', borderRadius: '4px', cursor: 'pointer' }}>
-              🛡️ Official: official@oceanhazard.com
-            </button>
-            <button onClick={() => handleDemoLogin('citizen@oceanhazard.com')} style={{ padding: '8px', textAlign: 'left', backgroundColor: '#e1f5fe', border: '1px solid #4fc3f7', borderRadius: '4px', cursor: 'pointer' }}>
-              👥 Citizen: citizen@oceanhazard.com
-            </button>
-          </div>
-          <p style={{ marginTop: '10px', fontStyle: 'italic' }}><strong>Password for all: demo123</strong></p>
-        </div>
+    <Router>
+      <div className="app-container">
+        <Toaster 
+          position="top-right"
+          toastOptions={{
+            duration: 4000,
+            style: {
+              background: 'var(--background-card)',
+              color: 'var(--foreground)',
+              border: '1px solid var(--border)',
+              borderRadius: 'var(--radius)',
+              backdropFilter: 'blur(10px)',
+            },
+          }}
+        />
+        <Routes>
+          <Route 
+            path="/" 
+            element={
+              user ? (
+                <FuturisticDashboard user={user} onLogout={handleLogout} />
+              ) : (
+                <Navigate to="/login" replace />
+              )
+            } 
+          />
+          <Route 
+            path="/login" 
+            element={
+              user ? (
+                <Navigate to="/" replace />
+              ) : (
+                <SimpleLoginPage />
+              )
+            } 
+          />
+        </Routes>
       </div>
-    </div>
+    </Router>
   );
 };
 
-export default function App() {
-  return (
-    <Router>
-      <Toaster position="top-right" />
-      <Routes>
-        <Route path="/*" element={<LoginApp />} />
-      </Routes>
-    </Router>
-  );
-}
+export default App;
