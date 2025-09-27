@@ -6,7 +6,9 @@
   "type": "module",
   "scripts": {
     "start": "node index.js",
-    "dev": "nodemon index.js",
+    "dev": "vite dev",
+    "backend": "node index.js",
+    "backend-dev": "nodemon index.js",
     "build": "vite build",
     "heroku-postbuild": "npm install && npm run build"
   },

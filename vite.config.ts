@@ -6,12 +6,13 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
   plugins: [react()],
   server: {
+    host: '0.0.0.0',
+    port: 5000,
     proxy: {
       // Proxy all requests starting with /api to the backend server
       '/api': {
-        // IMPORTANT: Replace this with the actual URL of your local backend server
-        target: 'http://localhost:3001', // Assuming your backend runs on port 3001
-        changeOrigin: true, // Needed for virtual hosted sites
+        target: 'http://localhost:3001', // Backend runs on port 3001
+        changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''), // Rewrite the path: remove /api
       },
     },
