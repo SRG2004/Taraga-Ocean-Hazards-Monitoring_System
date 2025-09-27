@@ -93,6 +93,12 @@ export const ReportHazardForm: React.FC<ReportHazardFormProps> = ({ onClose, onS
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+    
+    // Final validation before submission
+    if (!validateStep(1) || !validateStep(2) || !validateStep(3)) {
+      return;
+    }
+    
     setIsSubmitting(true);
     
     // Simulate API call
@@ -111,7 +117,25 @@ export const ReportHazardForm: React.FC<ReportHazardFormProps> = ({ onClose, onS
     }, 2000);
   };
 
-  const nextStep = () => setCurrentStep(prev => Math.min(prev + 1, 3));
+  const validateStep = (step: number): boolean => {
+    switch (step) {
+      case 1:
+        return !!(formData.type && formData.severity && formData.title.trim() && formData.description.trim());
+      case 2:
+        return !!(formData.location.latitude && formData.location.longitude);
+      case 3:
+        return !!(formData.contact.name.trim() && formData.contact.phone.trim());
+      default:
+        return false;
+    }
+  };
+
+  const nextStep = () => {
+    if (validateStep(currentStep)) {
+      setCurrentStep(prev => Math.min(prev + 1, 3));
+    }
+  };
+  
   const prevStep = () => setCurrentStep(prev => Math.max(prev - 1, 1));
 
   return (
@@ -466,19 +490,18 @@ export const ReportHazardForm: React.FC<ReportHazardFormProps> = ({ onClose, onS
                 <button
                   type="button"
                   onClick={nextStep}
-                  disabled={
-                    (currentStep === 1 && (!formData.type || !formData.severity || !formData.title || !formData.description)) ||
-                    (currentStep === 2 && (!formData.location.latitude || !formData.location.longitude))
-                  }
-                  className="btn-primary"
+                  disabled={!validateStep(currentStep)}
+                  className={`btn-primary ${!validateStep(currentStep) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  title={!validateStep(currentStep) ? 'Please fill in all required fields' : ''}
                 >
                   Next Step
                 </button>
               ) : (
                 <button
                   type="submit"
-                  disabled={isSubmitting || !formData.contact.name || !formData.contact.phone}
-                  className="btn-error flex items-center space-x-2"
+                  disabled={isSubmitting || !validateStep(1) || !validateStep(2) || !validateStep(3)}
+                  className={`btn-error flex items-center space-x-2 ${(!validateStep(1) || !validateStep(2) || !validateStep(3)) ? 'opacity-50 cursor-not-allowed' : ''}`}
+                  title={(!validateStep(1) || !validateStep(2) || !validateStep(3)) ? 'Please complete all required fields' : ''}
                 >
                   {isSubmitting && <div className="loading" />}
                   <Send className="w-4 h-4" />

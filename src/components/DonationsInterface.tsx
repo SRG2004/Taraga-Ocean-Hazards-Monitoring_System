@@ -48,7 +48,7 @@ export const DonationsInterface: React.FC<DonationsInterfaceProps> = ({ user }) 
       raised: 387500,
       donors: 1245,
       daysLeft: 8,
-      image: '/api/placeholder/300/200',
+      image: 'https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=Relief+Campaign',
       location: 'West Bengal & Odisha',
       urgent: true,
       category: 'relief'
@@ -61,7 +61,7 @@ export const DonationsInterface: React.FC<DonationsInterfaceProps> = ({ user }) 
       raised: 234000,
       donors: 567,
       daysLeft: 22,
-      image: '/api/placeholder/300/200',
+      image: 'https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=Relief+Campaign',
       location: 'Gujarat Coast',
       urgent: false,
       category: 'equipment'
@@ -74,7 +74,7 @@ export const DonationsInterface: React.FC<DonationsInterfaceProps> = ({ user }) 
       raised: 198750,
       donors: 892,
       daysLeft: 15,
-      image: '/api/placeholder/300/200',
+      image: 'https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=Relief+Campaign',
       location: 'Pan-India',
       urgent: false,
       category: 'research'
@@ -87,7 +87,7 @@ export const DonationsInterface: React.FC<DonationsInterfaceProps> = ({ user }) 
       raised: 123000,
       donors: 334,
       daysLeft: 30,
-      image: '/api/placeholder/300/200',
+      image: 'https://via.placeholder.com/300x200/3B82F6/FFFFFF?text=Relief+Campaign',
       location: 'Kerala & Karnataka',
       urgent: true,
       category: 'community'

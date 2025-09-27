@@ -128,9 +128,25 @@ export const SocialMediaMonitoring: React.FC<SocialMediaMonitoringProps> = ({ us
 
   useEffect(() => {
     setLoading(true);
-    // Simulate API call
+    // Simulate API call with fresh data based on filters
     setTimeout(() => {
-      setPosts(mockPosts);
+      // In a real app, this would call the social media service with filters
+      const filteredMockPosts = mockPosts.filter(post => {
+        if (filter.platform !== 'all' && post.platform !== filter.platform) return false;
+        if (filter.sentiment !== 'all' && post.sentiment !== filter.sentiment) return false;
+        // Apply timeframe filtering based on timestamp
+        let hours = 24; // default to 24 hours
+        if (filter.timeframe.includes('h')) {
+          hours = parseInt(filter.timeframe.replace(/[^0-9]/g, '')) || 24;
+        } else if (filter.timeframe.includes('d')) {
+          const days = parseInt(filter.timeframe.replace(/[^0-9]/g, '')) || 1;
+          hours = days * 24;
+        }
+        const cutoff = new Date(Date.now() - hours * 60 * 60 * 1000);
+        if (post.timestamp < cutoff) return false;
+        return true;
+      });
+      setPosts(filteredMockPosts);
       setLoading(false);
     }, 1500);
   }, [filter]);
@@ -138,7 +154,18 @@ export const SocialMediaMonitoring: React.FC<SocialMediaMonitoringProps> = ({ us
   const handleRefresh = () => {
     setIsRefreshing(true);
     setTimeout(() => {
-      setPosts([...mockPosts, ...mockPosts.map(p => ({ ...p, id: p.id + '_refresh' }))]);
+      // Simulate fetching new posts instead of duplicating
+      const newMockPosts = mockPosts.map((post, index) => ({
+        ...post,
+        id: `refresh_${Date.now()}_${index}`,
+        timestamp: new Date(Date.now() - Math.random() * 3600000), // Random timestamp within last hour
+        engagement: {
+          likes: Math.floor(Math.random() * 1000) + post.engagement.likes,
+          shares: Math.floor(Math.random() * 500) + post.engagement.shares,
+          comments: Math.floor(Math.random() * 200) + post.engagement.comments
+        }
+      }));
+      setPosts(newMockPosts);
       setIsRefreshing(false);
     }, 1000);
   };
